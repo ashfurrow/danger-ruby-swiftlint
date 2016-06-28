@@ -1,2 +1,2 @@
 # danger-swiftlint
-Danger plugin for Swiftlint
+Danger plugin for DangerSwiftLint
