@@ -1,3 +1,3 @@
-module DangerSwiftLint
+module DangerSwiftlint
   VERSION = "0.0.1".freeze
 end

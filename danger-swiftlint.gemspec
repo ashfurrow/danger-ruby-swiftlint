@@ -5,7 +5,7 @@ require 'version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'danger-swiftlint'
-  spec.version       = DangerSwiftLint::VERSION
+  spec.version       = DangerSwiftlint::VERSION
   spec.authors       = ['Ash Furrow', 'David Grandinetti', 'Orta Therox']
   spec.email         = ['ash@ashfurrow.com', 'dbgrandi@gmail.com', 'orta.therox@gmail.com']
   spec.description   = %q{A Danger plugin for linting Swift with Swiftlint.}
