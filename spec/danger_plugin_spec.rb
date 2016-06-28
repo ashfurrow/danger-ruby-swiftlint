@@ -49,12 +49,22 @@ module Danger
           expect(output).to include("SwiftFile.swift | 13 | Force casts should be avoided.")
         end
 
+        it 'handles no files' do
+          allow(@swiftlint).to receive(:modified_files).and_return('spec/fixtures/SwiftFile.swift')
+          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json --path spec/fixtures/SwiftFile.swift').and_return(@swiftlint_response)
+
+          @swiftlint.lint_files("spec/fixtures/*.swift")
+
+          expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
+        end
+
         it 'uses a config file' do
           @swiftlint.config_file = 'some_config.yml'
           allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json --config some_config.yml --path spec/fixtures/SwiftFile.swift').and_return(@swiftlint_response)
 
-          # Do it
           @swiftlint.lint_files("spec/fixtures/*.swift")
+
+          expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
         end
 
       end
