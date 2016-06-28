@@ -1,10 +1,10 @@
 require File.expand_path('../spec_helper', __FILE__)
 
 module Danger
-  describe Prose do
-    it 'is a plugin' do
-      expect(Danger::DangerSwiftLint < Danger::Plugin).to be_truthy
-    end
+  describe DangerSwiftLint do
+    # it 'is a plugin' do
+    #   expect(Danger::DangerSwiftLint < Danger::Plugin).to be_truthy
+    # end
     
     # describe 'with Dangerfile' do
     #   before do
