@@ -4,14 +4,11 @@ module Danger
   # This is done using the [SwiftLint](https://github.com/realm/SwiftLint) tool.
   # Results are passed out as a table in markdown.
   #
-  # @example TODO: Specifying custom CocoaPods installation options
+  # @example Specifying custom config file.
   #
   #          # Runs a linter with comma style disabled
-  #          proselint.disable_linters = [“misc.scare_quotes”, "misc.tense_present"]
-  #          proselint.lint_files “_posts/*.md”
-  #
-  #          # Runs a linter with all styles, on modified and added markpown files in this PR
-  #          proselint.lint_files
+  #          swiftlint.config_file = '.swiftlint.yml'
+  #          swiftlint.lint_files
   #
   # @see  artsy/eigen
   # @tags swift
@@ -70,6 +67,11 @@ module Danger
       markdown message
     end
 
+    # Parses swiftlint invocation results into a string
+    # which is formatted as a markdown table.
+    #
+    # @return  [String]
+    #
     def parse_results (results, heading)
       message = "#### #{heading}\n\n"
 
