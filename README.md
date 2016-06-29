@@ -10,7 +10,7 @@ Coming soon!
 
 ## Usage
 
-The easiest way to use is to just to this to your Dangerfile:
+The easiest way to use is just add this to your Dangerfile:
 
 ```rb
 swiftlint.lint_files
