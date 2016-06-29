@@ -27,7 +27,7 @@ module Danger
     # @return  [void]
     #
     def lint_files(files=nil)
-      # Installs a prose checker if needed
+      # Installs SwiftLint if needed
       system "brew install swiftlint" unless swiftlint_installed?
 
       # Check that this is in the user's PATH after installing

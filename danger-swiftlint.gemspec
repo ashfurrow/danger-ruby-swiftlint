@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = DangerSwiftlint::VERSION
   spec.authors       = ['Ash Furrow', 'David Grandinetti', 'Orta Therox']
   spec.email         = ['ash@ashfurrow.com', 'dbgrandi@gmail.com', 'orta.therox@gmail.com']
-  spec.description   = %q{A Danger plugin for linting Swift with Swiftlint.}
-  spec.summary       = %q{A Danger plugin for linting Swift with Swiftlint.}
+  spec.description   = %q{A Danger plugin for linting Swift with SwiftLint.}
+  spec.summary       = %q{A Danger plugin for linting Swift with SwiftLint.}
   spec.homepage      = 'https://github.com/ashfurrow/danger-swiftlint'
   spec.license       = 'MIT'
 

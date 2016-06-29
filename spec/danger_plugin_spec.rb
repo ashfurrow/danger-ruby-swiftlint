@@ -27,7 +27,7 @@ module Danger
       describe :lint_files do
         before do
           # So it doesn't try to install on your computer
-          allow(@swiftlint).to receive(:`).with("which swiftlint").and_return("/bin/wheverever/proselint")
+          allow(@swiftlint).to receive(:`).with("which swiftlint").and_return("/bin/wheverever/swiftlint")
 
           # Set up our stubbed JSON response
           @swiftlint_response = '[{"reason": "Force casts should be avoided.", "file": "/User/me/this_repo/spec/fixtures/SwiftFile.swift", "line": 13, "severity": "Error" }]'
