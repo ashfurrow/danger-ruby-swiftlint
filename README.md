@@ -26,7 +26,7 @@ swiftlint.lint_files
 And finally, you can provide a list of files manually:
 
 ``` ruby
-# Look through all changed Markdown files
+# Look through all changed Swift files
 swift_files = (modified_files + added_files).select do |file|
   file.end_with?(".swift")
 end
