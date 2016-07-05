@@ -50,10 +50,11 @@ module Danger
         end
 
         it 'handles no files' do
-          allow(@swiftlint).to receive(:modified_files).and_return('spec/fixtures/SwiftFile.swift')
+          allow(@swiftlint).to receive(:modified_files).and_return(['spec/fixtures/SwiftFile.swift'])
+          allow(@swiftlint).to receive(:added_files).and_return([])
           allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json --path spec/fixtures/SwiftFile.swift').and_return(@swiftlint_response)
 
-          @swiftlint.lint_files("spec/fixtures/*.swift")
+          @swiftlint.lint_files
 
           expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
         end
