@@ -75,8 +75,8 @@ module Danger
     def parse_results (results, heading)
       message = "#### #{heading}\n\n"
 
-      message << 'File | Line | Reason |\n'
-      message << '| --- | ----- | ----- |\n'
+      message << "File | Line | Reason |\n"
+      message << "| --- | ----- | ----- |\n"
 
       results.each do |r|
         filename = r['file'].split('/').last
