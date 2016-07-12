@@ -40,6 +40,9 @@ module Danger
       swift_files = files ? Dir.glob(files) : (modified_files + added_files)
       swift_files.select! do |line| line.end_with?(".swift") end
 
+      # Make sure we don't fail when paths have spaces
+      swift_files = swift_files.map { |file| "\"#{file}\"" }
+
       swiftlint_command = "swiftlint lint --quiet --reporter json"
       swiftlint_command += " --config #{config_file}" if config_file
 
