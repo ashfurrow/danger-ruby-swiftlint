@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Adds support for files with spaces in their names. See [#9](https://github.com/ashfurrow/danger-swiftlint/issues/9).
 
 ## 0.1.1
 
