@@ -61,7 +61,7 @@ module Danger
 
       # We got some error reports back from swiftlint
       if warnings.count > 0 || errors.count > 0
-        message = '### SwiftLint found issues\n\n'
+        message = "### SwiftLint found issues\n\n"
       end
 
       message << parse_results(warnings, 'Warnings') unless warnings.empty?
