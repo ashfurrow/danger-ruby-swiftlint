@@ -50,7 +50,7 @@ module Danger
       result_json = swift_files.uniq.collect { |f| JSON.parse(`#{swiftlint_command} --path #{f}`.strip).flatten }.flatten
 
       # Convert to swiftlint results
-      warnings = result_json.flatten.select do |results| 
+      warnings = result_json.select do |results| 
         results['severity'] == 'Warning'
       end
       errors = result_json.select do |results| 
@@ -67,7 +67,7 @@ module Danger
       message << parse_results(warnings, 'Warnings') unless warnings.empty?
       message << parse_results(errors, 'Errors') unless errors.empty?
 
-      markdown message
+      markdown message unless message.empty?
     end
 
     # Parses swiftlint invocation results into a string
