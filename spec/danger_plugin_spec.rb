@@ -24,6 +24,14 @@ module Danger
         expect(@swiftlint.swiftlint_installed?).to be_truthy
       end
 
+      it 'does not markdown an empty message' do
+        allow(@swiftlint).to receive(:`)
+          .with('swiftlint lint --quiet --reporter json --path "spec/fixtures/SwiftFile.swift"')
+          .and_return('[]')
+        
+        expect(@swiftlint.status_report[:markdowns].first).to be_nil
+      end
+
       describe :lint_files do
         before do
           # So it doesn't try to install on your computer

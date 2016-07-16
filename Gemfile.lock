@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    danger-swiftlint (0.1.0)
+    danger-swiftlint (0.1.2)
       danger
 
 GEM
@@ -14,7 +14,7 @@ GEM
     colored (1.2)
     cork (0.1.0)
       colored (~> 1.2)
-    danger (0.8.4)
+    danger (0.8.5)
       claide (~> 1.0)
       colored (~> 1.2)
       cork (~> 0.1)
