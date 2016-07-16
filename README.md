@@ -2,7 +2,7 @@
 
 # Danger SwiftLint
 
-A [Danger](https://github.com/danger/danger) plugin for [SwiftLint](https://github.com/realm/SwiftLint).
+A [Danger](https://github.com/danger/danger) plugin for [SwiftLint](https://github.com/realm/SwiftLint) that runs on macOS.
 
 ## Installation
 
