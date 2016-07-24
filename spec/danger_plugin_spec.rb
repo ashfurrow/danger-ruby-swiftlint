@@ -26,7 +26,7 @@ module Danger
 
       it 'does not markdown an empty message' do
         allow(@swiftlint).to receive(:`)
-          .with('swiftlint lint --quiet --reporter json --path "spec/fixtures/SwiftFile.swift"')
+          .with('swiftlint lint --quiet --reporter json')
           .and_return('[]')
         
         expect(@swiftlint.status_report[:markdowns].first).to be_nil
@@ -42,10 +42,10 @@ module Danger
         end
 
         it 'handles a known SwiftLint report' do
-          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json --path "spec/fixtures/SwiftFile.swift"').and_return(@swiftlint_response)
+          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json').and_return(@swiftlint_response)
 
           # Do it
-          @swiftlint.lint_files("spec/fixtures/*.swift")
+          @swiftlint.lint_files
 
           output = @swiftlint.status_report[:markdowns].first
 
@@ -58,9 +58,7 @@ module Danger
         end
 
         it 'handles no files' do
-          allow(@swiftlint).to receive(:modified_files).and_return(['spec/fixtures/SwiftFile.swift'])
-          allow(@swiftlint).to receive(:added_files).and_return([])
-          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json --path "spec/fixtures/SwiftFile.swift"').and_return(@swiftlint_response)
+          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json').and_return(@swiftlint_response)
 
           @swiftlint.lint_files
 
@@ -69,9 +67,9 @@ module Danger
 
         it 'uses a config file' do
           @swiftlint.config_file = 'some_config.yml'
-          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json --config some_config.yml --path "spec/fixtures/SwiftFile.swift"').and_return(@swiftlint_response)
+          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json --config some_config.yml').and_return(@swiftlint_response)
 
-          @swiftlint.lint_files("spec/fixtures/*.swift")
+          @swiftlint.lint_files
 
           expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
         end

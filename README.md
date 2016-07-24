@@ -20,22 +20,11 @@ The easiest way to use is just add this to your Dangerfile:
 swiftlint.lint_files
 ```
 
-That will lint any changed or added Swift files in the PR. You can also set up a config file first.
+That's going to lint all your Swift files. It would be better to only lint the changed or added ones, which is complicated due. Check out [this issue](https://github.com/ashfurrow/danger-swiftlint/issues/16) for more details.
 
 ```rb
 swiftlint.config_file = '.swiftlint.yml'
 swiftlint.lint_files
-```
-
-And finally, you can provide a list of files manually:
-
-``` ruby
-# Look through all changed Swift files
-swift_files = (modified_files + added_files).select do |file|
-  file.end_with?(".swift")
-end
-
-swiftlint.lint_files swift_files
 ```
 
 ## Attribution
