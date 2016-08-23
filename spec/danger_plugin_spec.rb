@@ -42,7 +42,7 @@ module Danger
         end
 
         it 'handles a known SwiftLint report' do
-          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json').and_return(@swiftlint_response)
+          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json)').and_return(@swiftlint_response)
 
           # Do it
           @swiftlint.lint_files
@@ -58,7 +58,7 @@ module Danger
         end
 
         it 'handles no files' do
-          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json').and_return(@swiftlint_response)
+          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json)').and_return(@swiftlint_response)
 
           @swiftlint.lint_files
 
@@ -67,13 +67,21 @@ module Danger
 
         it 'uses a config file' do
           @swiftlint.config_file = 'some_config.yml'
-          allow(@swiftlint).to receive(:`).with('swiftlint lint --quiet --reporter json --config some_config.yml').and_return(@swiftlint_response)
+          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --config some_config.yml)').and_return(@swiftlint_response)
 
           @swiftlint.lint_files
 
           expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
         end
 
+        it 'uses a custom directory' do
+          @swiftlint.directory = 'some_dir'
+          allow(@swiftlint).to receive(:`).with('(cd some_dir && swiftlint lint --quiet --reporter json)').and_return(@swiftlint_response)
+
+          @swiftlint.lint_files
+
+          expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
+        end
       end
     end
   end
