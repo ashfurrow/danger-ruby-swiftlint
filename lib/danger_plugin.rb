@@ -18,6 +18,9 @@ module Danger
     # Allows you to specify a config file location for swiftlint.
     attr_accessor :config_file
 
+    # Allows you to specify a directory from where swiftlint will be run. 
+    attr_accessor :directory
+
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of .markdown and .md files. 
     #
@@ -36,11 +39,13 @@ module Danger
         return
       end
 
-      swiftlint_command = "swiftlint lint --quiet --reporter json"
+      swiftlint_command = ""
+      swiftlint_command += "cd #{directory} && " if directory
+      swiftlint_command += "swiftlint lint --quiet --reporter json"
       swiftlint_command += " --config #{config_file}" if config_file
 
       require 'json'
-      result_json = JSON.parse(`#{swiftlint_command}`).flatten
+      result_json = JSON.parse(`(#{swiftlint_command})`).flatten
 
       # Convert to swiftlint results
       warnings = result_json.select do |results| 
