@@ -47,7 +47,7 @@ module Danger
           # Do it
           @swiftlint.lint_files
 
-          output = @swiftlint.status_report[:markdowns].first
+          output = @swiftlint.status_report[:markdowns].first.to_s
 
           expect(output).to_not be_empty
 
@@ -62,7 +62,7 @@ module Danger
 
           @swiftlint.lint_files
 
-          expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
+          expect(@swiftlint.status_report[:markdowns].first.to_s).to_not be_empty
         end
 
         it 'uses a config file' do
@@ -71,7 +71,7 @@ module Danger
 
           @swiftlint.lint_files
 
-          expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
+          expect(@swiftlint.status_report[:markdowns].first.to_s).to_not be_empty
         end
 
         it 'uses a custom directory' do
@@ -80,7 +80,7 @@ module Danger
 
           @swiftlint.lint_files
 
-          expect(@swiftlint.status_report[:markdowns].first).to_not be_empty
+          expect(@swiftlint.status_report[:markdowns].first.to_s).to_not be_empty
         end
       end
     end
