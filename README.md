@@ -12,6 +12,8 @@ Add this line to your Gemfile:
 gem 'danger-swiftlint'
 ```
 
+SwiftLint also needs to be installed before you run Danger, which you can do [via Homebrew](https://github.com/realm/SwiftLint#installation) or a [Brewfile](https://github.com/Homebrew/homebrew-bundle).
+
 ## Usage
 
 The easiest way to use is just add this to your Dangerfile:
