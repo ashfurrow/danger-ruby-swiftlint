@@ -68,13 +68,35 @@ module Danger
           expect(@swiftlint.status_report[:markdowns].first.to_s).to_not be_empty
         end
 
-        it 'uses a config file' do
-          @swiftlint.config_file = 'some_config.yml'
-          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --config some_config.yml --path "spec/fixtures/SwiftFile.swift")').and_return(@swiftlint_response)
+        it 'uses a config file generated on the fly by removing the "included" values from the given one' do
+          fake_temp_file = Tempfile.new('fake.yml')
 
-          @swiftlint.lint_files("spec/fixtures/*.swift")
+          begin
+            allow(Tempfile).to receive(:open) { |&block| block.call(fake_temp_file) }
 
-          expect(@swiftlint.status_report[:markdowns].first.to_s).to_not be_empty
+            @swiftlint.config_file = 'spec/fixtures/some_config.yml'
+
+            expect(YAML.load_file(@swiftlint.config_file)['included']).to_not be_nil
+
+            allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --config ' + fake_temp_file.path + ' --path "spec/fixtures/SwiftFile.swift")') do
+              # The tempfile lifetime is limited to the execution of the lint
+              # command, as such if we were to assert it after the command has
+              # run the file wouldn't exist anymore.
+              #
+              # By injecting the assertion here, whithin the method execution,
+              # we access the file while it still exists.
+              expect(YAML.load_file(fake_temp_file.path)['included']).to be_nil
+
+              @swiftlint_response
+            end
+
+            @swiftlint.lint_files("spec/fixtures/*.swift")
+
+            expect(@swiftlint.status_report[:markdowns].first.to_s).to_not be_empty
+          ensure
+            fake_temp_file.close
+            fake_temp_file.unlink
+          end
         end
 
         it 'uses a custom directory' do

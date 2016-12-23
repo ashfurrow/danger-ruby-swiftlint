@@ -39,48 +39,64 @@ module Danger
         return
       end
 
-      swiftlint_command = "swiftlint lint --quiet --reporter json"
-      swiftlint_command += " --config #{config_file}" if config_file
+      require 'tempfile'
+      Tempfile.open('.swiftlint_danger.yml') do |temp_config_file|
+        on_the_fly_configuration_path = nil
+        if config_file
+          require 'yaml'
+          original_config = YAML.load_file(config_file)
 
-      require 'json'
+          danger_compatible_config = original_config
+          danger_compatible_config.tap { |hash| hash.delete('included') }
 
-      if directory
-        swiftlint_command = "cd #{directory} && #{swiftlint_command}" if directory
+          File.write(temp_config_file.path, danger_compatible_config.to_yaml)
 
-        result_json = JSON.parse(`(#{swiftlint_command})`).flatten
-      else
-        # Either use files provided, or use the modified + added
-        swift_files = files ? Dir.glob(files) : (git.modified_files + git.added_files)
-        swift_files.select! do |line| line.end_with?(".swift") end
+          on_the_fly_configuration_path = temp_config_file.path
+        end
 
-        # Make sure we don't fail when paths have spaces
-        swift_files = swift_files.map { |file| "\"#{file}\"" }
+        swiftlint_command = "swiftlint lint --quiet --reporter json"
+        swiftlint_command += " --config #{on_the_fly_configuration_path}" if on_the_fly_configuration_path
 
-        result_json = swift_files
+        require 'json'
+
+        if directory
+          swiftlint_command = "cd #{directory} && #{swiftlint_command}" if directory
+
+          result_json = JSON.parse(`(#{swiftlint_command})`).flatten
+        else
+          # Either use files provided, or use the modified + added
+          swift_files = files ? Dir.glob(files) : (git.modified_files + git.added_files)
+          swift_files.select! do |line| line.end_with?(".swift") end
+
+          # Make sure we don't fail when paths have spaces
+          swift_files = swift_files.map { |file| "\"#{file}\"" }
+
+          result_json = swift_files
           .uniq
           .collect { |f| JSON.parse(`(#{swiftlint_command} --path #{f})`.strip).flatten }
           .flatten
+        end
+
+        # Convert to swiftlint results
+        warnings = result_json.select do |results| 
+          results['severity'] == 'Warning'
+        end
+        errors = result_json.select do |results| 
+          results['severity'] == 'Error' 
+        end
+
+        message = ''
+
+        # We got some error reports back from swiftlint
+        if warnings.count > 0 || errors.count > 0
+          message = "### SwiftLint found issues\n\n"
+        end
+
+        message << parse_results(warnings, 'Warnings') unless warnings.empty?
+        message << parse_results(errors, 'Errors') unless errors.empty?
+
+        markdown message unless message.empty?
       end
-
-      # Convert to swiftlint results
-      warnings = result_json.select do |results| 
-        results['severity'] == 'Warning'
-      end
-      errors = result_json.select do |results| 
-        results['severity'] == 'Error' 
-      end
-
-      message = ''
-
-      # We got some error reports back from swiftlint
-      if warnings.count > 0 || errors.count > 0
-        message = "### SwiftLint found issues\n\n"
-      end
-
-      message << parse_results(warnings, 'Warnings') unless warnings.empty?
-      message << parse_results(errors, 'Errors') unless errors.empty?
-
-      markdown message unless message.empty?
     end
 
     # Parses swiftlint invocation results into a string
