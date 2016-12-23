@@ -26,9 +26,9 @@ module Danger
 
       it 'does not markdown an empty message' do
         allow(@swiftlint).to receive(:`)
-          .with('swiftlint lint --quiet --reporter json')
+          .with('swiftlint lint --quiet --reporter json --path "spec/fixtures/SwiftFile.swift"')
           .and_return('[]')
-        
+
         expect(@swiftlint.status_report[:markdowns].first).to be_nil
       end
 
@@ -41,11 +41,11 @@ module Danger
           @swiftlint_response = '[{"reason": "Force casts should be avoided.", "file": "/User/me/this_repo/spec/fixtures/SwiftFile.swift", "line": 13, "severity": "Error" }]'
         end
 
-        it 'handles a known SwiftLint report' do
-          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json)').and_return(@swiftlint_response)
+        it 'handles a known SwiftLint report with give files' do
+          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --path "spec/fixtures/SwiftFile.swift")').and_return(@swiftlint_response)
 
           # Do it
-          @swiftlint.lint_files
+          @swiftlint.lint_files("spec/fixtures/*.swift")
 
           output = @swiftlint.status_report[:markdowns].first.to_s
 
@@ -57,8 +57,11 @@ module Danger
           expect(output).to include("SwiftFile.swift | 13 | Force casts should be avoided.")
         end
 
-        it 'handles no files' do
-          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json)').and_return(@swiftlint_response)
+        it 'handles no given files by looking up the git diff' do
+          allow(@swiftlint.git).to receive(:modified_files).and_return(['spec/fixtures/SwiftFile.swift'])
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+
+          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --path "spec/fixtures/SwiftFile.swift")').and_return(@swiftlint_response)
 
           @swiftlint.lint_files
 
@@ -67,9 +70,9 @@ module Danger
 
         it 'uses a config file' do
           @swiftlint.config_file = 'some_config.yml'
-          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --config some_config.yml)').and_return(@swiftlint_response)
+          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --config some_config.yml --path "spec/fixtures/SwiftFile.swift")').and_return(@swiftlint_response)
 
-          @swiftlint.lint_files
+          @swiftlint.lint_files("spec/fixtures/*.swift")
 
           expect(@swiftlint.status_report[:markdowns].first.to_s).to_not be_empty
         end

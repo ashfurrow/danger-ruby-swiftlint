@@ -29,7 +29,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files
+    def lint_files(files=nil)
       # Installs SwiftLint if needed
       system "brew install swiftlint" unless swiftlint_installed?
 
@@ -39,13 +39,28 @@ module Danger
         return
       end
 
-      swiftlint_command = ""
-      swiftlint_command += "cd #{directory} && " if directory
-      swiftlint_command += "swiftlint lint --quiet --reporter json"
+      swiftlint_command = "swiftlint lint --quiet --reporter json"
       swiftlint_command += " --config #{config_file}" if config_file
 
       require 'json'
-      result_json = JSON.parse(`(#{swiftlint_command})`).flatten
+
+      if directory
+        swiftlint_command = "cd #{directory} && #{swiftlint_command}" if directory
+
+        result_json = JSON.parse(`(#{swiftlint_command})`).flatten
+      else
+        # Either use files provided, or use the modified + added
+        swift_files = files ? Dir.glob(files) : (git.modified_files + git.added_files)
+        swift_files.select! do |line| line.end_with?(".swift") end
+
+        # Make sure we don't fail when paths have spaces
+        swift_files = swift_files.map { |file| "\"#{file}\"" }
+
+        result_json = swift_files
+          .uniq
+          .collect { |f| JSON.parse(`(#{swiftlint_command} --path #{f})`.strip).flatten }
+          .flatten
+      end
 
       # Convert to swiftlint results
       warnings = result_json.select do |results| 
