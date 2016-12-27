@@ -38,7 +38,7 @@ module Danger
           allow(@swiftlint).to receive(:`).with("which swiftlint").and_return("/bin/wheverever/swiftlint")
 
           # Set up our stubbed JSON response
-          @swiftlint_response = '[{"reason": "Force casts should be avoided.", "file": "/User/me/this_repo/spec/fixtures/SwiftFile.swift", "line": 13, "severity": "Error" }]'
+          @swiftlint_response = '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 13 }]'
         end
 
         it 'handles a known SwiftLint report with give files' do
