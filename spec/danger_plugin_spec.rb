@@ -107,6 +107,29 @@ module Danger
 
           expect(@swiftlint.status_report[:markdowns].first.to_s).to_not be_empty
         end
+
+        it 'does not crash if JSON reporter returns an empty string rather than an object' do
+          # This can occurr if for some reson there is no file at the give path.
+          # In such a case SwiftLint will write to stderr:
+          #
+          #   Could not read contents of `path/to/file`
+          #   No lintable files found at path 'path/to/file'
+          #
+          # and exit with code 1.
+          #
+          # To our code this would simply look like an empty result, which
+          # would then become an empty string, which cannot be parsed into a
+          # JSON object.
+          response = ''
+          allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --path "spec/fixtures/SwiftFile.swift")').and_return(response)
+
+          @swiftlint.lint_files("spec/fixtures/*.swift")
+
+          output = @swiftlint.status_report[:markdowns].first.to_s
+
+          # If we get to this point then we haven't crashed, happy days
+          expect(output).to be_empty
+        end
       end
     end
   end

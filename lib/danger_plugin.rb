@@ -73,7 +73,9 @@ module Danger
 
           result_json = swift_files
           .uniq
-          .collect { |f| JSON.parse(`(#{swiftlint_command} --path #{f})`.strip).flatten }
+          .collect { |f| `(#{swiftlint_command} --path #{f})`.strip }
+          .reject { |s| s == '' }
+          .map { |s| JSON.parse(s).flatten }
           .flatten
         end
 
