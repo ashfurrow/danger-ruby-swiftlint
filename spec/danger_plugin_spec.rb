@@ -130,6 +130,27 @@ module Danger
           # If we get to this point then we haven't crashed, happy days
           expect(output).to be_empty
         end
+
+        it 'does not lint files in the excluded paths' do
+          allow(@swiftlint.git).to receive(:modified_files).and_return(['spec/fixtures/SwiftFile.swift', 'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift'])
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+
+          fake_temp_file = Tempfile.new('fake.yml')
+
+          begin
+            allow(Tempfile).to receive(:open) { |&block| block.call(fake_temp_file) }
+
+            # The only call that should be received is this one, if @swiftlint
+            # will be called with any other param the test will fail
+            allow(@swiftlint).to receive(:`).with('(swiftlint lint --quiet --reporter json --config ' + fake_temp_file.path + ' --path "spec/fixtures/SwiftFile.swift")').and_return(@swiftlint_response)
+
+            @swiftlint.config_file = 'spec/fixtures/some_config.yml'
+            @swiftlint.lint_files
+          ensure
+            fake_temp_file.close
+            fake_temp_file.unlink
+          end
+        end
       end
     end
   end

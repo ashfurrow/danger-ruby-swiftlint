@@ -42,12 +42,16 @@ module Danger
       require 'tempfile'
       Tempfile.open('.swiftlint_danger.yml') do |temp_config_file|
         on_the_fly_configuration_path = nil
+        excluded_dirs = []
         if config_file
           require 'yaml'
           original_config = YAML.load_file(config_file)
 
           danger_compatible_config = original_config
           danger_compatible_config.tap { |hash| hash.delete('included') }
+
+          excluded_dirs = danger_compatible_config['excluded']
+            .map { |path| File.dirname(config_file) + '/' + path }
 
           File.write(temp_config_file.path, danger_compatible_config.to_yaml)
 
@@ -66,7 +70,15 @@ module Danger
         else
           # Either use files provided, or use the modified + added
           swift_files = files ? Dir.glob(files) : (git.modified_files + git.added_files)
+
           swift_files.select! do |line| line.end_with?(".swift") end
+
+          require 'find'
+          swift_files = swift_files.reject do |file|
+            excluded_dirs.reduce(false) do |accumulator, excluded_dir|
+              accumulator = accumulator || Find.find(excluded_dir).include?(file)
+            end
+          end
 
           # Make sure we don't fail when paths have spaces
           swift_files = swift_files.map { |file| "\"#{file}\"" }
