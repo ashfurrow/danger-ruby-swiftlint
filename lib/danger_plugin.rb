@@ -52,6 +52,7 @@ module Danger
 
           excluded_dirs = danger_compatible_config['excluded']
             .map { |path| File.dirname(config_file) + '/' + path }
+            .select { |path| File.exists?(File.expand_path(path)) || Dir.exists?(File.expand_path(path)) }
 
           File.write(temp_config_file.path, danger_compatible_config.to_yaml)
 
