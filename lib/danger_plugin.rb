@@ -76,9 +76,12 @@ module Danger
 
           require 'find'
           swift_files = swift_files.reject do |file|
-            excluded_dirs.reduce(false) do |accumulator, excluded_dir|
-              accumulator = accumulator || Find.find(excluded_dir).include?(file)
+            found = false
+            excluded_dirs.each do |excluded_dir|
+              found = Find.find(File.expand_path(excluded_dir)).include?(File.expand_path(file))
+              break if found
             end
+            found
           end
 
           # Make sure we don't fail when paths have spaces
