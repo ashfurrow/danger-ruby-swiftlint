@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.3.0
+
+- Adds selective linting, now SwiftLint will only run on the PR added and modified files. See [#23](https://github.com/ashfurrow/danger-swiftlint/pull/23)
+
 ## 0.2.1
 
 - Adds support for specifying a directory in which to run SwiftLint. See [#19](https://github.com/ashfurrow/danger-swiftlint/pull/19).
