@@ -5,4 +5,4 @@ included:
   - an/included/folder
 
 excluded:
-  - an/excluded/folder
+  - excluded_dir
