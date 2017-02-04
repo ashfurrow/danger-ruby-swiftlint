@@ -1,0 +1,2 @@
+swiftlint.config = './.swiftlint.yml'
+swiftlint.lint_files

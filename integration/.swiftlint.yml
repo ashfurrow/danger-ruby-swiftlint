@@ -1,0 +1,89 @@
+# custom linter rules defined and tested at https://github.com/XXX/XXX
+---
+excluded:
+  - Carthage
+  - Pods
+
+line_length:
+  - 210
+  - 220
+
+type_name:
+  min_length: 2
+  max_length:
+    - 60
+    - 80
+
+variable_name:
+  min_length: 1
+  max_length:
+    - 60
+    - 80
+
+large_tuple:
+  - 4
+
+function_parameter_count:
+  - 6
+
+disabled_rules:
+  - trailing_whitespace #this should stay disabled
+  - todo #should stay disabled
+  - nesting #should stay disabled
+  - opening_brace #keep disabled, but enabled and run autocorrect every now and then
+  - closing_brace #keep disabled, but enabled and run autocorrect every now and then
+  - force_try
+  - force_cast
+  - type_body_length
+  - function_body_length
+  - file_length
+  - vertical_parameter_alignment
+  - redundant_optional_initialization
+  - redundant_string_enum_value
+  - trailing_newline #for now
+  - vertical_whitespace #for now
+  - line_length #for now
+  - comma #for now
+  - trailing_comma #for now
+  - colon #for now
+  - operator_whitespace #for now
+  - nimble_operator #for now
+  - statement_position #for now
+  - variable_name #for now
+  - implicit_getter #for now
+  - syntactic_sugar #for now
+  - control_statement #for now
+  - unused_closure_parameter #for now
+  - mark #for now
+  - weak_delegate #for now
+  - cyclomatic_complexity #for now
+  - explicit_init #for now
+  - overridden_super_call #for now
+
+ opt_in_rules:
+  - overridden_super_call
+  - redundant_nil_coalesing
+  - explicit_init
+  - nimble_operator
+
+custom_rules:
+  localized_string:
+    name: "Localized String Dynamic Key"
+    regex: 'NSLocalizedString'
+    message: "User facing strings don't belong in the network SDK!"
+    severity: error
+  nscoding:
+    name: "NSCoding"
+    regex: '(\bNSCoding\b|\bNSCoder\b|\bNSSecureCoding\b|\bclassForCoder\b|\bsupportsSecureCoding\b)'
+    message: "Don\'t use NSCoding\/NSSecureCoding"
+    severity: error
+#  nested_guard:
+#    name: "Nested Guard"
+#    regex: '(?:\bif\b|\bswitch\b|\bfor\b)[^\{\n:]*\{[^\}]*[^\}]*^\s*(guard).*$'
+#    message: "guard may not be nested inside other control flow statements (see Domain SE-0010)"
+#    severity: warning
+  unique_error_domain:
+    name: "Unique Error Domain"
+    regex: 'DomainExceptionLogging\.(?:\w+WithMessage\(|.*domain: )(?:(\"[^\"\n]*\\\([^\)\n]+\)[^\"\n]*\")|([^\"\n]+)[\,\)])'
+    message: "Error domains should be general and non-unique, to facilitate error grouping"
+    severity: warning
