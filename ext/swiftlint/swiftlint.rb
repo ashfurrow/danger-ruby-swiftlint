@@ -17,11 +17,12 @@ class Swiftlint
       `#{swiftlint_path} #{cmd} #{swiftlint_arguments(options)}`
     end
 
+    # Shortcut for running the lint command
     def lint(options)
       run('lint', options)
     end
 
-    # Return true if swiftlint is installed and false otherwise
+    # Return true if swiftlint is installed or false otherwise
     def is_installed?
       File.exist?(swiftlint_path)
     end
