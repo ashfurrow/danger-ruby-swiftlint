@@ -92,7 +92,8 @@ module Danger
       return files.
         # Ensure only swift files are selected
         select { |file| file.end_with?('.swift') }.
-        # Make sure we don't fail when paths have spaces map { |file| Shellwords.escape(file) }.
+        # Make sure we don't fail when paths have spaces
+        map { |file| Shellwords.escape(file) }.
         # Remove dups
         uniq.
         # Reject files excluded on configuration
