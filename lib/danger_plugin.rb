@@ -1,3 +1,8 @@
+require 'find'
+require 'yaml'
+require 'shellwords'
+require_relative '../ext/swiftlint/swiftlint'
+
 module Danger
 
   # Lint Swift files inside your projects.
@@ -15,7 +20,7 @@ module Danger
   #
   class DangerSwiftlint < Plugin
 
-    # Allows you to specify a config file location for swiftlint.
+    # The path to SwiftLint's configuration file
     attr_accessor :config_file
 
     # Allows you to specify a directory from where swiftlint will be run.
@@ -30,99 +35,93 @@ module Danger
     # @return  [void]
     #
     def lint_files(files=nil)
-      # Installs SwiftLint if needed
-      system "brew install swiftlint" unless swiftlint_installed?
+      # Fails if swiftlint isn't installed
+      raise "swiftlint is not installed" unless Swiftlint.is_installed?
 
-      # Check that this is in the user's PATH after installing
-      unless swiftlint_installed?
-        fail "swiftlint is not in the user's PATH, or it failed to install"
-        return
-      end
+      # Extract excluded paths
+      excluded_paths = excluded_files_from_config(config_file)
 
-      require 'tempfile'
-      Tempfile.open('.swiftlint_danger.yml') do |temp_config_file|
-        on_the_fly_configuration_path = nil
-        excluded_dirs = []
-        if config_file
-          require 'yaml'
-          original_config = YAML.load_file(config_file)
+      # Extract swift files (ignoring excluded ones)
+      files = find_swift_files(files, excluded_paths)
 
-          danger_compatible_config = original_config
-          danger_compatible_config.tap { |hash| hash.delete('included') }
+      # Prepare swiftlint options
+      options = {
+        config: config_file,
+        reporter: 'json',
+        quiet: true,
+        pwd: directory || Dir.pwd
+      }
 
-          excluded_dirs = danger_compatible_config['excluded']
-            .map { |path| File.dirname(config_file) + '/' + path }
-            .select { |path| File.exists?(File.expand_path(path)) || Dir.exists?(File.expand_path(path)) }
+      # Lint each file and collect the results
+      issues = run_swiftlint(files, options)
 
-          File.write(temp_config_file.path, danger_compatible_config.to_yaml)
+      # Filter warnings and errors
+      warnings = issues.select { |issue| issue['severity'] == 'Warning' }
+      errors = issues.select { |issue| issue['severity'] == 'Error' }
 
-          on_the_fly_configuration_path = temp_config_file.path
-        end
-
-        swiftlint_command = "swiftlint lint --quiet --reporter json"
-        swiftlint_command += " --config #{on_the_fly_configuration_path}" if on_the_fly_configuration_path
-
-        require 'json'
-
-        if directory
-          swiftlint_command = "cd #{directory} && #{swiftlint_command}" if directory
-
-          result_json = JSON.parse(`(#{swiftlint_command})`).flatten
-        else
-          # Either use files provided, or use the modified + added
-          swift_files = files ? Dir.glob(files) : (git.modified_files + git.added_files)
-
-          swift_files.select! do |line| line.end_with?(".swift") end
-
-          require 'find'
-          swift_files = swift_files.reject do |file|
-            found = false
-            excluded_dirs.each do |excluded_dir|
-              found = Find.find(File.expand_path(excluded_dir)).include?(File.expand_path(file))
-              break if found
-            end
-            found
-          end
-
-          # Make sure we don't fail when paths have spaces
-          swift_files = swift_files.map { |file| "\"#{file}\"" }
-
-          result_json = swift_files
-          .uniq
-          .collect { |f| `(#{swiftlint_command} --path #{f})`.strip }
-          .reject { |s| s == '' }
-          .map { |s| JSON.parse(s).flatten }
-          .flatten
-        end
-
-        # Convert to swiftlint results
-        warnings = result_json.select do |results|
-          results['severity'] == 'Warning'
-        end
-        errors = result_json.select do |results|
-          results['severity'] == 'Error'
-        end
-
-        message = ''
-
-        # We got some error reports back from swiftlint
-        if warnings.count > 0 || errors.count > 0
-          message = "### SwiftLint found issues\n\n"
-        end
-
-        message << parse_results(warnings, 'Warnings') unless warnings.empty?
-        message << parse_results(errors, 'Errors') unless errors.empty?
-
-        markdown message unless message.empty?
+      # Report if any warning or error
+      if warnings.count > 0 || errors.count > 0
+        message = "### SwiftLint found issues\n\n"
+        message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
+        message << markdown_issues(errors, 'Errors') unless errors.empty?
+        markdown message
       end
     end
 
-    # Parses swiftlint invocation results into a string
-    # which is formatted as a markdown table.
+    # Run swiftlint on each file and aggregate collect the issues
+    #
+    # @return [Array] swiftlint issues
+    def run_swiftlint(files, options)
+      files
+        .map { |file| options.merge({path: file})}
+        .map { |options| Swiftlint.lint(options)}
+        .reject { |s| s == '' }
+        .map { |s| JSON.parse(s).flatten }
+        .flatten
+    end
+
+    # Find swift files from the files glob
+    # If files are not provided it will use git modifield and added files
+    #
+    # @return [Array] swift files
+    def find_swift_files(files=nil, excluded_files=[])
+      # Assign files to lint
+      files = files ? Dir.glob(files) : git.modified_files + git.added_files
+
+      # Filter files to lint
+      return files.
+        # Ensure only swift files are selected
+        select { |file| file.end_with?('.swift') }.
+        # Make sure we don't fail when paths have spaces map { |file| Shellwords.escape(file) }.
+        # Remove dups
+        uniq.
+        # Reject files excluded on configuration
+        reject { |file|
+          excluded_files.any? { |excluded| Find.find(excluded).include?(File.expand_path(file)) }
+        }
+    end
+
+    # Parses the configuration file and return the excluded files
+    #
+    # @return [Array] list of files excluded
+    def excluded_files_from_config(filepath)
+      config = if filepath
+        YAML.load_file(config_file)
+      else
+        {"excluded" => []}
+      end
+
+      # Extract excluded paths
+      return config['excluded'].
+        map { |path| File.join(File.dirname(config_file), path) }.
+        map { |path| File.expand_path(path) }.
+        select { |path| File.exists?(path) || Dir.exists?(path) }
+    end
+
+    # Create a markdown table from swiftlint issues
     #
     # @return  [String]
-    #
-    def parse_results (results, heading)
+    def markdown_issues (results, heading)
       message = "#### #{heading}\n\n"
 
       message << "File | Line | Reason |\n"
@@ -137,13 +136,6 @@ module Danger
       end
 
       message
-    end
-
-    # Determine if swiftlint is currently installed in the system paths.
-    # @return  [Bool]
-    #
-    def swiftlint_installed?
-      `which swiftlint`.strip.empty? == false
     end
   end
 end

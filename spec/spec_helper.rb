@@ -9,6 +9,10 @@ RSpec.configure do |config|
   config.color = true
 end
 
+RSpec::Matchers.define :including do |x|
+  match { |actual| actual.include? x  }
+end
+
 require 'bundler/setup'
 require 'pry'
 
