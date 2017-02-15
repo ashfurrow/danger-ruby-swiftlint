@@ -29,7 +29,7 @@ class Swiftlint
 
     private
 
-    # Parse options into shell arguments the way swift expect it to be
+    # Parse options into shell arguments how swift expect it to be
     # more information: https://github.com/Carthage/Commandant
     # @param options (Hash) hash containing swiftlint options
     def swiftlint_arguments options
@@ -45,12 +45,12 @@ class Swiftlint
         # prepend '--' into the argument
         map { |key, value| ["--#{key}", value] }.
         # reduce everything into a single string
-        reduce("") { |args, option| "#{args} #{option[0]} #{option[1]}" }.
+        reduce('') { |args, option| "#{args} #{option[0]} #{option[1]}" }.
         # strip leading spaces
         strip
     end
 
-    # Oath where swiftlint should be found
+    # Path where swiftlint should be found
     def swiftlint_path
       File.expand_path(File.join(File.dirname(__FILE__), 'bin', 'swiftlint'))
     end
