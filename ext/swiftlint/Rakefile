@@ -11,7 +11,12 @@ namespace :swiftlint do
     DESTINATION = File.expand_path(File.join(File.dirname(__FILE__), 'bin'))
 
     puts "Downloading swiftlint@#{VERSION}"
-    sh "mkdir -p #{DESTINATION} && curl -L #{URL} | bsdtar -xf- -C #{DESTINATION}"
+    sh [
+      "mkdir -p #{DESTINATION}",
+      "curl -s -L #{URL} -o swiftlint.zip",
+      "unzip -q swiftlint.zip -d #{DESTINATION}",
+      "rm swiftlint.zip"
+    ].join(" && ")
   end
 
 end
