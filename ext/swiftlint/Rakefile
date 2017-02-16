@@ -1,0 +1,24 @@
+require_relative '../../lib/version'
+
+namespace :swiftlint do
+
+  desc "Download and install swiftlint tool"
+  task :install do
+    REPO = "https://github.com/realm/SwiftLint"
+    VERSION = DangerSwiftlint::SWIFTLINT_VERSION
+    ASSET = "portable_swiftlint.zip"
+    URL = "#{REPO}/releases/download/#{VERSION}/#{ASSET}"
+    DESTINATION = File.expand_path(File.join(File.dirname(__FILE__), 'bin'))
+
+    puts "Downloading swiftlint@#{VERSION}"
+    sh [
+      "mkdir -p #{DESTINATION}",
+      "curl -s -L #{URL} -o #{ASSET}",
+      "unzip -q #{ASSET} -d #{DESTINATION}",
+      "rm #{ASSET}"
+    ].join(" && ")
+  end
+
+end
+
+task default: 'swiftlint:install'

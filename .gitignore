@@ -1,3 +1,6 @@
+# Swiftlint extension binary but keep the bin folder
+ext/swiftlint/bin
+
 *.gem
 *.rbc
 /.config

@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files`.split($/)
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
+  spec.extensions    = %w(ext/swiftlint/Rakefile)
 
   spec.add_dependency 'danger'
 
@@ -29,12 +30,12 @@ Gem::Specification.new do |spec|
   # Makes testing easy via `bundle exec guard`
   spec.add_development_dependency "guard", '~> 2.14'
   spec.add_development_dependency "guard-rspec", '~> 4.7'
-  
+
   # If you want to work on older builds of ruby
   spec.add_development_dependency "listen", '3.0.7'
 
   # This gives you the chance to run a REPL inside your test
-  # via 
+  # via
   #    binding.pry
   # This will stop test execution and let you inspect the results
   spec.add_development_dependency "pry"
