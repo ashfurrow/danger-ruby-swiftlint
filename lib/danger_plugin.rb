@@ -34,7 +34,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files=nil)
+    def lint_files(files=nil, inline_mode: false)
       # Fails if swiftlint isn't installed
       raise "swiftlint is not installed" unless Swiftlint.is_installed?
 
@@ -59,12 +59,18 @@ module Danger
       warnings = issues.select { |issue| issue['severity'] == 'Warning' }
       errors = issues.select { |issue| issue['severity'] == 'Error' }
 
-      # Report if any warning or error
-      if warnings.count > 0 || errors.count > 0
-        message = "### SwiftLint found issues\n\n"
-        message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
-        message << markdown_issues(errors, 'Errors') unless errors.empty?
-        markdown message
+      if inline_mode
+        # Reprt with inline comment
+        send_inline_comment(warnings, "warn")
+        send_inline_comment(errors, "fail")
+      else
+        # Report if any warning or error
+        if warnings.count > 0 || errors.count > 0
+          message = "### SwiftLint found issues\n\n"
+          message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
+          message << markdown_issues(errors, 'Errors') unless errors.empty?
+          markdown message
+        end
       end
     end
 
@@ -137,6 +143,17 @@ module Danger
       end
 
       message
+    end
+
+    # Send inline comment with danger's warn or fail method
+    #
+    # @return [void]
+    def send_inline_comment (results, method)
+      dir = "#{Dir.pwd}/"
+      results.each do |r|
+	filename = r['file'].gsub(dir, "")
+	send(method, r['reason'], file: filename, line: r['line'])
+      end
     end
   end
 end
