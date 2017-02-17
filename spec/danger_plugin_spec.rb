@@ -101,6 +101,18 @@ module Danger
           @swiftlint.config_file = 'spec/fixtures/some_config.yml'
           @swiftlint.lint_files
         end
+
+        it 'generates errors instead of markdown when use inline mode' do
+          allow(Swiftlint).to receive(:lint)
+            .with(hash_including(:path => 'spec/fixtures/SwiftFile.swift'))
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files("spec/fixtures/*.swift", inline_mode: true)
+
+          status = @swiftlint.status_report
+          expect(status[:errors]).to_not be_empty
+          expect(status[:markdowns]).to be_empty
+        end
       end
     end
   end
