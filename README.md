@@ -29,6 +29,13 @@ swiftlint.config_file = '.swiftlint.yml'
 swiftlint.lint_files
 ```
 
+If you want the lint result shows in diff instead of comment, you can use `inline_mode` option. Violations that out of the diff will show in danger's fail or warn section.
+
+```rb
+swiftlint.lint_files inline_mode: true
+```
+
+
 ## Attribution
 
 Original structure, sequence, and organization of repo taken from [danger-prose](https://github.com/dbgrandi/danger-prose) by [David Grandinetti](https://github.com/dbgrandi/).
