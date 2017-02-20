@@ -2,6 +2,10 @@
 
 ## Current Master
 
+## 0.16.1
+
+- Support for inline comments. See [#29](https://github.com/ashfurrow/danger-swiftlint/issues/28)
+
 - Add new versioning schema which will mirror swiftlint application, now should
   be easier to predict which version of swiftlint will be installed. See [#25](https://github.com/ashfurrow/danger-swiftlint/issues/25)
 
