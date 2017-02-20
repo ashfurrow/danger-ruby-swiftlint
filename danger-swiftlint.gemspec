@@ -19,10 +19,10 @@ Gem::Specification.new do |spec|
   spec.extensions    = %w(ext/swiftlint/Rakefile)
 
   spec.add_dependency 'danger'
+  spec.add_dependency 'rake', '~> 10.0'
 
   # General ruby development
   spec.add_development_dependency 'bundler', '~> 1.3'
-  spec.add_development_dependency 'rake', '~> 10.0'
 
   #  Testing support
   spec.add_development_dependency "rspec", '~> 3.4'
