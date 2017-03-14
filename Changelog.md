@@ -2,16 +2,15 @@
 
 ## Current Master
 
-## 0.16.1
+## 0.4.0
 
 - Support for inline comments. See [#29](https://github.com/ashfurrow/danger-swiftlint/issues/28)
 
-- Add new versioning schema which will mirror swiftlint application, now should
-  be easier to predict which version of swiftlint will be installed. See [#25](https://github.com/ashfurrow/danger-swiftlint/issues/25)
-
-- Adds swiftlint installation as part of the gem install process, should make
+- Adds SwiftLint installation as part of the gem install process, should make
   it easier to track which upstream fixes should or shouldn't be done by
   danger-swiftlint. See [#25](https://github.com/ashfurrow/danger-swiftlint/issues/25)
+
+- Add `danger-swiftlint` CLI, with `swiftlint_version` command to print the version of the SwiftLint binary installed by the plugin. See [#32](https://github.com/ashfurrow/danger-swiftlint/pull/32)
 
 ## 0.3.0
 
