@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+if $PROGRAM_NAME == __FILE__
+  $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+end
+require 'thor'
+require 'version'
+
+class DangerSwiftlintCLI < Thor
+  desc 'version', 'The version of the installed danger-swiftlint plugin'
+  def version
+    puts DangerSwiftlint::VERSION
+  end
+
+  desc 'swiftlint_version', 'The SwiftLint version used by the plugin'
+  def swiftlint_version
+    puts DangerSwiftlint::SWIFTLINT_VERSION
+  end
+end
+
+DangerSwiftlintCLI.start(ARGV)

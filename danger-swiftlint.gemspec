@@ -17,8 +17,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
   spec.extensions    = %w(ext/swiftlint/Rakefile)
+  spec.executables   = ['danger-swiftlint']
 
   spec.add_dependency 'danger'
+  spec.add_dependency 'thor', '~> 0.19'
   spec.add_dependency 'rake', '~> 10.0'
 
   # General ruby development
