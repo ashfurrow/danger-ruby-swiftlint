@@ -80,7 +80,7 @@ module Danger
     def run_swiftlint(files, options)
       files
         .map { |file| options.merge({path: file})}
-        .map { |options| Swiftlint.lint(options)}
+        .map { |full_options| Swiftlint.lint(full_options)}
         .reject { |s| s == '' }
         .map { |s| JSON.parse(s).flatten }
         .flatten
