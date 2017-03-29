@@ -92,7 +92,7 @@ module Danger
     # @return [Array] swift files
     def find_swift_files(files=nil, excluded_files=[])
       # Assign files to lint
-      files = files ? Dir.glob(files) : git.modified_files + git.added_files
+      files = files ? Dir.glob(files) : (git.modified_files - git.deleted_files) + git.added_files
 
       # Filter files to lint
       return files.

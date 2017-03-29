@@ -9,6 +9,7 @@ module Danger
     describe 'with Dangerfile' do
       before do
         @swiftlint = testing_dangerfile.swiftlint
+        allow(@swiftlint.git).to receive(:deleted_files).and_return([])
       end
 
       it "handles swiftlint not being installed" do
@@ -99,6 +100,28 @@ module Danger
             .once
 
           @swiftlint.config_file = 'spec/fixtures/some_config.yml'
+          @swiftlint.lint_files
+        end
+
+        it 'does not lint deleted files paths' do
+          # Danger (4.3.0 at the time of writing) returns deleted files in the
+          # modified fiels array, which kinda makes sense.
+          # At linting time though deleted files should not be linted because
+          # they'd result in file not found errors.
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+            'spec/fixtures/SwiftFile.swift',
+            'spec/fixtures/DeletedFile.swift'
+          ])
+          allow(@swiftlint.git).to receive(:deleted_files).and_return([
+            'spec/fixtures/DeletedFile.swift'
+          ])
+
+          expect(Swiftlint).to receive(:lint)
+            .with(hash_including(:path => 'spec/fixtures/SwiftFile.swift'))
+            .and_return(@swiftlint_response)
+            .once
+
           @swiftlint.lint_files
         end
 
