@@ -33,7 +33,7 @@ module Danger
 
         it 'accept files as arguments' do
           expect(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => 'spec/fixtures/SwiftFile.swift'))
+            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')))
             .and_return(@swiftlint_response)
 
           @swiftlint.lint_files("spec/fixtures/*.swift")
@@ -47,7 +47,7 @@ module Danger
           allow(@swiftlint.git).to receive(:modified_files).and_return(['spec/fixtures/SwiftFile.swift'])
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => 'spec/fixtures/SwiftFile.swift'))
+            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')))
             .and_return(@swiftlint_response)
 
           @swiftlint.lint_files
@@ -95,7 +95,7 @@ module Danger
           ])
 
           expect(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => 'spec/fixtures/SwiftFile.swift'))
+            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')))
             .and_return(@swiftlint_response)
             .once
 
@@ -118,7 +118,7 @@ module Danger
           ])
 
           expect(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => 'spec/fixtures/SwiftFile.swift'))
+            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')))
             .and_return(@swiftlint_response)
             .once
 
@@ -127,7 +127,7 @@ module Danger
 
         it 'generates errors instead of markdown when use inline mode' do
           allow(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => 'spec/fixtures/SwiftFile.swift'))
+            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')))
             .and_return(@swiftlint_response)
 
           @swiftlint.lint_files("spec/fixtures/*.swift", inline_mode: true)

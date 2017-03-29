@@ -102,9 +102,10 @@ module Danger
         map { |file| Shellwords.escape(file) }.
         # Remove dups
         uniq.
+        map { |file| File.expand_path(file) }.
         # Reject files excluded on configuration
         reject { |file|
-          excluded_files.any? { |excluded| Find.find(excluded).include?(File.expand_path(file)) }
+          excluded_files.any? { |excluded| Find.find(excluded).include?(file) }
         }
     end
 
