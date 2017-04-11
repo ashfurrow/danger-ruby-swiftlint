@@ -2,6 +2,8 @@
 
 ## Current Master
 
+## 0.4.1
+
 - Fixes deleted files being added to the list of files to lint. See [#34](https://github.com/ashfurrow/danger-swiftlint/pull/34).
 
 ## 0.4.0
