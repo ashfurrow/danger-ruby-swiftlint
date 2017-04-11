@@ -80,7 +80,7 @@ module Danger
     def run_swiftlint(files, options)
       files
         .map { |file| options.merge({path: file})}
-        .map { |options| Swiftlint.lint(options)}
+        .map { |full_options| Swiftlint.lint(full_options)}
         .reject { |s| s == '' }
         .map { |s| JSON.parse(s).flatten }
         .flatten
@@ -92,7 +92,7 @@ module Danger
     # @return [Array] swift files
     def find_swift_files(files=nil, excluded_files=[])
       # Assign files to lint
-      files = files ? Dir.glob(files) : git.modified_files + git.added_files
+      files = files ? Dir.glob(files) : (git.modified_files - git.deleted_files) + git.added_files
 
       # Filter files to lint
       return files.
@@ -102,9 +102,10 @@ module Danger
         map { |file| Shellwords.escape(file) }.
         # Remove dups
         uniq.
+        map { |file| File.expand_path(file) }.
         # Reject files excluded on configuration
         reject { |file|
-          excluded_files.any? { |excluded| Find.find(excluded).include?(File.expand_path(file)) }
+          excluded_files.any? { |excluded| Find.find(excluded).include?(file) }
         }
     end
 
