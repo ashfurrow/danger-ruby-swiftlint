@@ -2,6 +2,8 @@
 
 ## Current Master
 
+- Bump managed SwiftLint version to 0.18.1
+
 ## 0.4.1
 
 - Fixes deleted files being added to the list of files to lint. See [#34](https://github.com/ashfurrow/danger-swiftlint/pull/34).
