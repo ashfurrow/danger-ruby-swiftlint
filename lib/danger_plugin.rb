@@ -119,8 +119,10 @@ module Danger
         {"excluded" => []}
       end
 
+      excluded_paths = config['excluded'] || []
+
       # Extract excluded paths
-      return config['excluded'].
+      return excluded_paths.
         map { |path| File.join(File.dirname(config_file), path) }.
         map { |path| File.expand_path(path) }.
         select { |path| File.exists?(path) || Dir.exists?(path) }
