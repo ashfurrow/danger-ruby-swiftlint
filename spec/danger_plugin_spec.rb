@@ -103,6 +103,21 @@ module Danger
           @swiftlint.lint_files
         end
 
+        it 'does not crash when excluded is nil' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+            'spec/fixtures/SwiftFile.swift',
+          ])
+
+          expect(Swiftlint).to receive(:lint)
+            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')))
+            .and_return(@swiftlint_response)
+            .once
+
+          @swiftlint.config_file = 'spec/fixtures/empty_excluded.yml'
+          @swiftlint.lint_files
+        end
+
         it 'does not lint deleted files paths' do
           # Danger (4.3.0 at the time of writing) returns deleted files in the
           # modified fiels array, which kinda makes sense.
