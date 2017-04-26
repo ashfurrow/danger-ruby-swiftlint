@@ -2,6 +2,8 @@
 
 ## Current Master
 
+## 0.5.0
+
 - Bump managed SwiftLint version to 0.18.1
 
 ## 0.4.1
