@@ -90,7 +90,7 @@ module Danger
     # If files are not provided it will use git modifield and added files
     #
     # @return [Array] swift files
-    def find_swift_files(files=nil, excluded_files=[])
+    def find_swift_files(files=nil, excluded_paths=[])
       # Assign files to lint
       files = files ? Dir.glob(files) : (git.modified_files - git.deleted_files) + git.added_files
 
@@ -105,7 +105,11 @@ module Danger
         map { |file| File.expand_path(file) }.
         # Reject files excluded on configuration
         reject { |file|
-          excluded_files.any? { |excluded| Find.find(excluded).include?(file) }
+          excluded_paths.any? { |excluded_path|
+            Find.find(excluded_path).
+              map { |excluded_file| Shellwords.escape(excluded_file) }.
+              include?(file)
+          }
         }
     end
 
