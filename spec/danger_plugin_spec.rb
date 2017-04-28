@@ -91,7 +91,8 @@ module Danger
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([
             'spec/fixtures/SwiftFile.swift',
-            'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift'
+            'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift',
+            'spec/fixtures/excluded_dir/SwiftFile WithEscaped+CharactersThatShouldNotBeIncluded.swift'
           ])
 
           expect(Swiftlint).to receive(:lint)
