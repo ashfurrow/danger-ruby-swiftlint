@@ -1,1 +1,1 @@
-// This file intentional left blank-ish.
+// This file intentionally left blank-ish.
