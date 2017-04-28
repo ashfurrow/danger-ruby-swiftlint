@@ -2,6 +2,8 @@
 
 ## Current Master
 
+- Fixed excluded files containing characters that need escaping. See [#40](https://github.com/ashfurrow/danger-swiftlint/pull/40).
+
 ## 0.5.0
 
 - Bump managed SwiftLint version to 0.18.1
