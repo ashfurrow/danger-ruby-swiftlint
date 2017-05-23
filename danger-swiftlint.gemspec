@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'danger'
   spec.add_dependency 'thor', '~> 0.19'
-  spec.add_dependency 'rake', '~> 10.0'
+  spec.add_dependency 'rake', '> 10'
 
   # General ruby development
   spec.add_development_dependency 'bundler', '~> 1.3'
