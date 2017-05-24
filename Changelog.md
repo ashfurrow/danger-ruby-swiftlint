@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.5.1
+
 - Fixed excluded files containing characters that need escaping. See [#40](https://github.com/ashfurrow/danger-swiftlint/pull/40).
 
 ## 0.5.0
