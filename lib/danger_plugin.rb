@@ -19,6 +19,8 @@ module Danger
   # @tags swift
   #
   class DangerSwiftlint < Plugin
+    # The path to SwiftLint's execution
+    attr_accessor :binary_path
 
     # The path to SwiftLint's configuration file
     attr_accessor :config_file
@@ -36,7 +38,7 @@ module Danger
     #
     def lint_files(files=nil, inline_mode: false)
       # Fails if swiftlint isn't installed
-      raise "swiftlint is not installed" unless Swiftlint.is_installed?
+      raise "swiftlint is not installed" unless swiftlint.is_installed?
 
       # Extract excluded paths
       excluded_paths = excluded_files_from_config(config_file)
@@ -80,7 +82,7 @@ module Danger
     def run_swiftlint(files, options)
       files
         .map { |file| options.merge({path: file})}
-        .map { |full_options| Swiftlint.lint(full_options)}
+        .map { |full_options| swiftlint.lint(full_options)}
         .reject { |s| s == '' }
         .map { |s| JSON.parse(s).flatten }
         .flatten
@@ -161,6 +163,13 @@ module Danger
 	filename = r['file'].gsub(dir, "")
 	send(method, r['reason'], file: filename, line: r['line'])
       end
+    end
+
+    # Make SwiftLint object for binary_path
+    #
+    # @return [SwiftLint]
+    def swiftlint
+      Swiftlint.new(binary_path)
     end
   end
 end
