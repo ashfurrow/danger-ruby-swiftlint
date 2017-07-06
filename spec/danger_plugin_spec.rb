@@ -22,6 +22,17 @@ module Danger
         expect(@swiftlint.status_report[:markdowns].first).to be_nil
       end
 
+      context 'with binary_path' do
+        let(:binary_path) { '/path/to/swiftlint' }
+        it 'passes binary_path to constructor' do
+          @swiftlint.binary_path = binary_path
+          swiftlint = double('swiftlint')
+          allow(Swiftlint).to receive(:new).with(binary_path).and_return(swiftlint)
+
+          expect(@swiftlint.swiftlint).to eql(swiftlint)
+        end
+      end
+
       describe :lint_files do
         before do
           allow_any_instance_of(Swiftlint).to receive(:is_installed?).and_return(true)

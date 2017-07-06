@@ -11,6 +11,18 @@ describe Swiftlint do
     expect(swiftlint.is_installed?).to be_falsy
   end
 
+  context 'with binary_path' do
+    let(:binary_path) { '/path/to/swiftlint' }
+    let(:swiftlint) { Swiftlint.new(binary_path) }
+    it 'is_installed? works based on specific path' do
+      expect(File).to receive(:exist?).with(binary_path).and_return(true)
+      expect(swiftlint.is_installed?).to be_truthy
+
+      expect(File).to receive(:exist?).with(binary_path).and_return(false)
+      expect(swiftlint.is_installed?).to be_falsy
+    end
+  end
+
   it 'runs lint by default with options being optional' do
     expect(swiftlint).to receive(:`).with(including('swiftlint lint'))
     swiftlint.run()
