@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.6.0
+
+- Fixes problem with differing swiftlint paths. See [#44](https://github.com/ashfurrow/danger-swiftlint/issues/44).
+
 ## 0.5.1
 
 - Fixed excluded files containing characters that need escaping. See [#40](https://github.com/ashfurrow/danger-swiftlint/pull/40).
