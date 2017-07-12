@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.7.0
+
+- Bump managed SwiftLint version to 0.20.1
+
 ## 0.6.0
 
 - Fixes problem with differing swiftlint paths. See [#44](https://github.com/ashfurrow/danger-swiftlint/issues/44).
