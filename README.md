@@ -36,6 +36,7 @@ If you want the lint result shows in diff instead of comment, you can use `inlin
 swiftlint.lint_files inline_mode: true
 ```
 
+You can use the `SWIFTLINT_VERSION` environment variable to override the default version installed via the `rake install` task.
 
 ## Attribution
 
