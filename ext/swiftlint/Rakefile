@@ -5,7 +5,7 @@ namespace :swiftlint do
   desc "Download and install swiftlint tool"
   task :install do
     REPO = "https://github.com/realm/SwiftLint"
-    VERSION = DangerSwiftlint::SWIFTLINT_VERSION
+    VERSION = ENV["SWIFTLINT_VERSION"] || DangerSwiftlint::SWIFTLINT_VERSION
     ASSET = "portable_swiftlint.zip"
     URL = "#{REPO}/releases/download/#{VERSION}/#{ASSET}"
     DESTINATION = File.expand_path(File.join(File.dirname(__FILE__), 'bin'))
