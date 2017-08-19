@@ -40,15 +40,23 @@ module Danger
       # Fails if swiftlint isn't installed
       raise "swiftlint is not installed" unless swiftlint.is_installed?
 
+      config = if config_file
+        config_file
+      elsif File.file?('.swiftlint.yml')
+        '.swiftlint.yml'
+      else
+        nil
+      end
+
       # Extract excluded paths
-      excluded_paths = excluded_files_from_config(config_file)
+      excluded_paths = excluded_files_from_config(config)
 
       # Extract swift files (ignoring excluded ones)
       files = find_swift_files(files, excluded_paths)
 
       # Prepare swiftlint options
       options = {
-        config: config_file,
+        config: config,
         reporter: 'json',
         quiet: true,
         pwd: directory || Dir.pwd
@@ -120,7 +128,7 @@ module Danger
     # @return [Array] list of files excluded
     def excluded_files_from_config(filepath)
       config = if filepath
-        YAML.load_file(config_file)
+        YAML.load_file(filepath)
       else
         {"excluded" => []}
       end
@@ -129,7 +137,7 @@ module Danger
 
       # Extract excluded paths
       return excluded_paths.
-        map { |path| File.join(File.dirname(config_file), path) }.
+        map { |path| File.join(File.dirname(filepath), path) }.
         map { |path| File.expand_path(path) }.
         select { |path| File.exists?(path) || Dir.exists?(path) }
     end
