@@ -59,7 +59,7 @@ module Danger
         config: config,
         reporter: 'json',
         quiet: true,
-        pwd: directory || Dir.pwd
+        pwd: directory ? File.expand_path(directory) : Dir.pwd
       }
 
       # Lint each file and collect the results

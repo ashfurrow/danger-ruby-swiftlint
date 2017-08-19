@@ -71,7 +71,7 @@ module Danger
           @swiftlint.directory = 'some_dir'
 
           allow_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:pwd => @swiftlint.directory))
+            .with(hash_including(:pwd => File.expand_path(@swiftlint.directory)))
             .and_return(@swiftlint_response)
 
           @swiftlint.lint_files("spec/fixtures/*.swift")
