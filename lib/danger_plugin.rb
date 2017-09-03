@@ -116,7 +116,7 @@ module Danger
         uniq.
         map { |file| File.expand_path(file) }.
         # Ensure only files in the selected directory
-        select { |file| file.start_with?(dir_selected)}.
+        select { |file| file.start_with?(dir_selected) }.
         # Reject files excluded on configuration
         reject { |file|
           excluded_paths.any? { |excluded_path|

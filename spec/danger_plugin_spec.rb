@@ -84,19 +84,19 @@ module Danger
         it 'only lint files specified in custom dir' do
           @swiftlint.directory = 'spec/fixtures/some_dir'
         
-        allow(@swiftlint.git).to receive(:added_files).and_return([])
-        allow(@swiftlint.git).to receive(:modified_files).and_return([
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
             'spec/fixtures/some_dir/SwiftFile.swift',
             'spec/fixtures/SwiftFile.swift'
-        ])
+          ])
 
-        expect_any_instance_of(Swiftlint).to receive(:lint)
-        .with(hash_including(:path => File.expand_path('spec/fixtures/some_dir/SwiftFile.swift')))
-        .once
-        .and_return(@swiftlint_response)
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+          .with(hash_including(:path => File.expand_path('spec/fixtures/some_dir/SwiftFile.swift')))
+          .once
+          .and_return(@swiftlint_response)
 
-        @swiftlint.lint_files
-          end
+          @swiftlint.lint_files
+        end
 
         it 'does not crash if JSON reporter returns an empty string rather than an object' do
           # This can occurr if for some reson there is no file at the give path.
