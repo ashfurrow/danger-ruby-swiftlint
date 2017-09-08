@@ -83,7 +83,7 @@ module Danger
 
 	  # Fail Danger on errors
 	  if fail_on_error && errors.count > 0
-	    fail  
+	    fail "Failed due to SwiftLint errors"
 	  end
         end
       end
