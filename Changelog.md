@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.9.0
+
+- Fixes linting of superfluous files in subdirectories. See [#53](https://github.com/ashfurrow/danger-swiftlint/pull/53).
+
 ## 0.8.0
 
 - Fixes Directory not found error. See [#51](https://github.com/ashfurrow/danger-swiftlint/pull/51).
