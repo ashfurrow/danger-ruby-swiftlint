@@ -36,6 +36,12 @@ If you want the lint result shows in diff instead of comment, you can use `inlin
 swiftlint.lint_files inline_mode: true
 ```
 
+If you want lint errors to fail Danger, you can use `fail_on_error` option.
+
+```rb
+swiftlint.lint_files fail_on_error: true
+```
+
 You can use the `SWIFTLINT_VERSION` environment variable to override the default version installed via the `rake install` task.
 
 ## Attribution
