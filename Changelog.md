@@ -4,6 +4,7 @@
 
 - Fixes Directory not found error. See [#51](https://github.com/ashfurrow/danger-swiftlint/pull/51).
 - Fixes issue with missing `.swiftlint.yml` file. See [#52](https://github.com/ashfurrow/danger-swiftlint/pull/52).
+- Adds `fail_on_error` option. See [#55](https://github.com/ashfurrow/danger-swiftlint/pull/55)
 
 ## 0.7.0
 
