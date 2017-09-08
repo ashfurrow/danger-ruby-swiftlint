@@ -47,19 +47,21 @@ module Danger
       else
         nil
       end
+      
+      dir_selected = directory ? File.expand_path(directory) : Dir.pwd
 
       # Extract excluded paths
       excluded_paths = excluded_files_from_config(config)
 
       # Extract swift files (ignoring excluded ones)
-      files = find_swift_files(files, excluded_paths)
+      files = find_swift_files(files, excluded_paths, dir_selected)
 
       # Prepare swiftlint options
       options = {
         config: config,
         reporter: 'json',
         quiet: true,
-        pwd: directory ? File.expand_path(directory) : Dir.pwd
+        pwd: dir_selected
       }
 
       # Lint each file and collect the results
@@ -105,7 +107,7 @@ module Danger
     # If files are not provided it will use git modifield and added files
     #
     # @return [Array] swift files
-    def find_swift_files(files=nil, excluded_paths=[])
+    def find_swift_files(files=nil, excluded_paths=[], dir_selected)
       # Assign files to lint
       files = files ? Dir.glob(files) : (git.modified_files - git.deleted_files) + git.added_files
 
@@ -118,6 +120,8 @@ module Danger
         # Remove dups
         uniq.
         map { |file| File.expand_path(file) }.
+        # Ensure only files in the selected directory
+        select { |file| file.start_with?(dir_selected) }.
         # Reject files excluded on configuration
         reject { |file|
           excluded_paths.any? { |excluded_path|
