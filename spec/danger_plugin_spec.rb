@@ -157,7 +157,7 @@ module Danger
             .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')))
             .and_return(@swiftlint_response)
 
-          @swiftlint.lint_files("spec/fixtures/*.swift", inline_mode: true)
+          @swiftlint.lint_files("spec/fixtures/*.swift", inline_mode: true, fail_on_error: false)
 
           status = @swiftlint.status_report
           expect(status[:errors]).to_not be_empty

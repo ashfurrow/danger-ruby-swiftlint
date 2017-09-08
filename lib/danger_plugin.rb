@@ -36,7 +36,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files=nil, inline_mode: false)
+    def lint_files(files=nil, inline_mode: false, fail_on_error: false)
       # Fails if swiftlint isn't installed
       raise "swiftlint is not installed" unless swiftlint.is_installed?
 
@@ -80,6 +80,11 @@ module Danger
           message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
           message << markdown_issues(errors, 'Errors') unless errors.empty?
           markdown message
+
+	  # Fail Danger on errors
+	  if fail_on_error && errors.count > 0
+	    fail "Failed due to SwiftLint errors"
+	  end
         end
       end
     end
