@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Adds `additional_swiftlint_args` option. See[#57](https://github.com/ashfurrow/danger-swiftlint/issues/57).
 
 ## 0.9.0
 
