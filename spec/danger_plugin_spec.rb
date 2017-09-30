@@ -54,6 +54,14 @@ module Danger
           expect(output).to include("SwiftFile.swift | 13 | Force casts should be avoided.")
         end
 
+        it 'accepts additional cli arguments' do
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')), '--lenient')
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files("spec/fixtures/*.swift", additional_swiftlint_args: '--lenient')
+        end
+
         it 'uses git diff when files are not provided' do
           allow(@swiftlint.git).to receive(:modified_files).and_return(['spec/fixtures/SwiftFile.swift'])
           allow(@swiftlint.git).to receive(:added_files).and_return([])
