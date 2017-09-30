@@ -36,7 +36,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files=nil, inline_mode: false, fail_on_error: false)
+    def lint_files(files=nil, inline_mode: false, fail_on_error: false, additional_swiftlint_args: "")
       # Fails if swiftlint isn't installed
       raise "swiftlint is not installed" unless swiftlint.is_installed?
 
@@ -65,7 +65,7 @@ module Danger
       }
 
       # Lint each file and collect the results
-      issues = run_swiftlint(files, options)
+      issues = run_swiftlint(files, options, additional_swiftlint_args)
 
       # Filter warnings and errors
       warnings = issues.select { |issue| issue['severity'] == 'Warning' }
@@ -94,10 +94,10 @@ module Danger
     # Run swiftlint on each file and aggregate collect the issues
     #
     # @return [Array] swiftlint issues
-    def run_swiftlint(files, options)
+    def run_swiftlint(files, options, additional_swiftlint_args)
       files
         .map { |file| options.merge({path: file})}
-        .map { |full_options| swiftlint.lint(full_options)}
+        .map { |full_options| swiftlint.lint(full_options, additional_swiftlint_args)}
         .reject { |s| s == '' }
         .map { |s| JSON.parse(s).flatten }
         .flatten
