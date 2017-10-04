@@ -33,9 +33,11 @@ describe Swiftlint do
     expect(swiftlint).to receive(:`).with(including(cmd))
 
     swiftlint.run('lint',
+                  '',
                   use_stdin: false,
                   cache_path: '/path',
-                  enable_all_rules: true)
+                  enable_all_rules: true
+                  )
   end
 end
 

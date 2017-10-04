@@ -42,6 +42,12 @@ If you want lint errors to fail Danger, you can use `fail_on_error` option.
 swiftlint.lint_files fail_on_error: true
 ```
 
+If you need to specify options for `swiftlint` that can _only_ be specified by command line arguments, use the `additional_swiftlint_args` option.
+
+```rb
+swiftlint.lint_files additional_swiftlint_args: '--lenient'
+```
+
 You can use the `SWIFTLINT_VERSION` environment variable to override the default version installed via the `rake install` task.
 
 ## Attribution

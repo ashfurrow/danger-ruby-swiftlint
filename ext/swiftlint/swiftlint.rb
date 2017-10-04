@@ -5,19 +5,19 @@ class Swiftlint
   end
 
   # Runs swiftlint
-  def run(cmd='lint', options={})
+  def run(cmd='lint', additional_swiftlint_args='', options={})
     # change pwd before run swiftlint
     if options.has_key? :pwd
       Dir.chdir options.delete(:pwd)
     end
 
     # run swiftlint with provided options
-    `#{swiftlint_path} #{cmd} #{swiftlint_arguments(options)}`
+    `#{swiftlint_path} #{cmd} #{swiftlint_arguments(options, additional_swiftlint_args)}`
   end
 
   # Shortcut for running the lint command
-  def lint(options)
-    run('lint', options)
+  def lint(options, additional_swiftlint_args)
+    run('lint', additional_swiftlint_args, options)
   end
 
   # Return true if swiftlint is installed or false otherwise
@@ -35,8 +35,8 @@ class Swiftlint
   # Parse options into shell arguments how swift expect it to be
   # more information: https://github.com/Carthage/Commandant
   # @param options (Hash) hash containing swiftlint options
-  def swiftlint_arguments options
-    options.
+  def swiftlint_arguments (options, additional_swiftlint_args)
+    (options.
       # filter not null
       select {|key, value| !value.nil?}.
       # map booleans arguments equal true
@@ -48,7 +48,8 @@ class Swiftlint
       # prepend '--' into the argument
       map { |key, value| ["--#{key}", value] }.
       # reduce everything into a single string
-      reduce('') { |args, option| "#{args} #{option[0]} #{option[1]}" }.
+      reduce('') { |args, option| "#{args} #{option[0]} #{option[1]}"} + 
+      " #{additional_swiftlint_args}").
       # strip leading spaces
       strip
   end
