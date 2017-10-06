@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path('../spec_helper', __FILE__)
 
 module Danger
@@ -12,9 +14,9 @@ module Danger
         allow(@swiftlint.git).to receive(:deleted_files).and_return([])
       end
 
-      it "handles swiftlint not being installed" do
+      it 'handles swiftlint not being installed' do
         allow_any_instance_of(Swiftlint).to receive(:is_installed?).and_return(false)
-        expect { @swiftlint.lint_files }.to raise_error("swiftlint is not installed")
+        expect { @swiftlint.lint_files }.to raise_error('swiftlint is not installed')
       end
 
       it 'does not markdown an empty message' do
@@ -44,29 +46,29 @@ module Danger
 
         it 'accept files as arguments' do
           expect_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
             .and_return(@swiftlint_response)
 
-          @swiftlint.lint_files("spec/fixtures/*.swift")
+          @swiftlint.lint_files('spec/fixtures/*.swift')
 
           output = @swiftlint.status_report[:markdowns].first.to_s
-          expect(output).to include("SwiftLint found issues")
-          expect(output).to include("SwiftFile.swift | 13 | Force casts should be avoided.")
+          expect(output).to include('SwiftLint found issues')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
         end
 
         it 'accepts additional cli arguments' do
           expect_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')), '--lenient')
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '--lenient')
             .and_return(@swiftlint_response)
 
-          @swiftlint.lint_files("spec/fixtures/*.swift", additional_swiftlint_args: '--lenient')
+          @swiftlint.lint_files('spec/fixtures/*.swift', additional_swiftlint_args: '--lenient')
         end
 
         it 'uses git diff when files are not provided' do
           allow(@swiftlint.git).to receive(:modified_files).and_return(['spec/fixtures/SwiftFile.swift'])
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
             .and_return(@swiftlint_response)
 
           @swiftlint.lint_files
@@ -79,29 +81,28 @@ module Danger
           @swiftlint.directory = 'spec/fixtures/some_dir'
 
           allow_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:pwd => File.expand_path(@swiftlint.directory)), '')
+            .with(hash_including(pwd: File.expand_path(@swiftlint.directory)), '')
             .and_return(@swiftlint_response)
 
-          @swiftlint.lint_files(["spec/fixtures/some_dir/SwiftFile.swift"])
+          @swiftlint.lint_files(['spec/fixtures/some_dir/SwiftFile.swift'])
 
           output = @swiftlint.status_report[:markdowns].first.to_s
           expect(output).to_not be_empty
-          
         end
 
         it 'only lint files specified in custom dir' do
           @swiftlint.directory = 'spec/fixtures/some_dir'
-        
+
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([
-            'spec/fixtures/some_dir/SwiftFile.swift',
-            'spec/fixtures/SwiftFile.swift'
-          ])
+                                                                         'spec/fixtures/some_dir/SwiftFile.swift',
+                                                                         'spec/fixtures/SwiftFile.swift'
+                                                                       ])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
-          .with(hash_including(:path => File.expand_path('spec/fixtures/some_dir/SwiftFile.swift')), '')
-          .once
-          .and_return(@swiftlint_response)
+            .with(hash_including(path: File.expand_path('spec/fixtures/some_dir/SwiftFile.swift')), '')
+            .once
+            .and_return(@swiftlint_response)
 
           @swiftlint.lint_files
         end
@@ -127,13 +128,13 @@ module Danger
         it 'does not lint files in the excluded paths' do
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([
-            'spec/fixtures/SwiftFile.swift',
-            'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift',
-            'spec/fixtures/excluded_dir/SwiftFile WithEscaped+CharactersThatShouldNotBeIncluded.swift'
-          ])
+                                                                         'spec/fixtures/SwiftFile.swift',
+                                                                         'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift',
+                                                                         'spec/fixtures/excluded_dir/SwiftFile WithEscaped+CharactersThatShouldNotBeIncluded.swift'
+                                                                       ])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
             .once
             .and_return(@swiftlint_response)
 
@@ -144,11 +145,11 @@ module Danger
         it 'does not crash when excluded is nil' do
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([
-            'spec/fixtures/SwiftFile.swift',
-          ])
+                                                                         'spec/fixtures/SwiftFile.swift'
+                                                                       ])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
             .once
             .and_return(@swiftlint_response)
 
@@ -208,15 +209,15 @@ module Danger
           # they'd result in file not found errors.
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([
-            'spec/fixtures/SwiftFile.swift',
-            'spec/fixtures/DeletedFile.swift'
-          ])
+                                                                         'spec/fixtures/SwiftFile.swift',
+                                                                         'spec/fixtures/DeletedFile.swift'
+                                                                       ])
           allow(@swiftlint.git).to receive(:deleted_files).and_return([
-            'spec/fixtures/DeletedFile.swift'
-          ])
+                                                                        'spec/fixtures/DeletedFile.swift'
+                                                                      ])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
             .once
             .and_return(@swiftlint_response)
 
@@ -225,10 +226,10 @@ module Danger
 
         it 'generates errors instead of markdown when use inline mode' do
           allow_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(:path => File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
             .and_return(@swiftlint_response)
 
-          @swiftlint.lint_files("spec/fixtures/*.swift", inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
+          @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
 
           status = @swiftlint.status_report
           expect(status[:errors]).to_not be_empty

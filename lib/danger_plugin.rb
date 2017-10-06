@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'find'
 require 'yaml'
 require 'shellwords'
 require_relative '../ext/swiftlint/swiftlint'
 
 module Danger
-
   # Lint Swift files inside your projects.
   # This is done using the [SwiftLint](https://github.com/realm/SwiftLint) tool.
   # Results are passed out as a table in markdown.
@@ -39,9 +40,9 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files=nil, inline_mode: false, fail_on_error: false, additional_swiftlint_args: "")
+    def lint_files(files = nil, inline_mode: false, fail_on_error: false, additional_swiftlint_args: '')
       # Fails if swiftlint isn't installed
-      raise "swiftlint is not installed" unless swiftlint.is_installed?
+      raise 'swiftlint is not installed' unless swiftlint.is_installed?
 
       config = if config_file
         File.expand_path(config_file)
@@ -51,7 +52,7 @@ module Danger
         nil
       end
       log "Using config file: #{config}"
-      
+
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
       log "Swiftlint will be run from #{dir_selected}"
 
@@ -81,19 +82,19 @@ module Danger
 
       if inline_mode
         # Reprt with inline comment
-        send_inline_comment(warnings, "warn")
-        send_inline_comment(errors, "fail")
+        send_inline_comment(warnings, 'warn')
+        send_inline_comment(errors, 'fail')
       else
         # Report if any warning or error
         if warnings.count > 0 || errors.count > 0
-          message = "### SwiftLint found issues\n\n"
+          message = +"### SwiftLint found issues\n\n"
           message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
           message << markdown_issues(errors, 'Errors') unless errors.empty?
           markdown message
 
           # Fail Danger on errors
-          if fail_on_error && errors.count > 0
-            fail "Failed due to SwiftLint errors"
+          if fail_on_error && errors.count.positive?
+            fail 'Failed due to SwiftLint errors'
           end
         end
       end
@@ -104,8 +105,8 @@ module Danger
     # @return [Array] swiftlint issues
     def run_swiftlint(files, options, additional_swiftlint_args)
       files
-        .map { |file| options.merge({path: file})}
-        .map { |full_options| swiftlint.lint(full_options, additional_swiftlint_args)}
+        .map { |file| options.merge(path: file) }
+        .map { |full_options| swiftlint.lint(full_options, additional_swiftlint_args) }
         .reject { |s| s == '' }
         .map { |s| JSON.parse(s).flatten }
         .flatten
@@ -115,29 +116,29 @@ module Danger
     # If files are not provided it will use git modifield and added files
     #
     # @return [Array] swift files
-    def find_swift_files(files=nil, excluded_paths=[], dir_selected)
+    def find_swift_files(files = nil, excluded_paths = [], dir_selected)
       # Assign files to lint
       files = files ? Dir.glob(files) : (git.modified_files - git.deleted_files) + git.added_files
 
       # Filter files to lint
-      return files.
+      files.
         # Ensure only swift files are selected
         select { |file| file.end_with?('.swift') }.
         # Make sure we don't fail when paths have spaces
         map { |file| Shellwords.escape(file) }.
         # Remove dups
-        uniq.
-        map { |file| File.expand_path(file) }.
+        uniq
+           .map { |file| File.expand_path(file) }.
         # Ensure only files in the selected directory
         select { |file| file.start_with?(dir_selected) }.
         # Reject files excluded on configuration
-        reject { |file|
-          excluded_paths.any? { |excluded_path|
-            Find.find(excluded_path).
-              map { |excluded_file| Shellwords.escape(excluded_file) }.
-              include?(file)
-          }
-        }
+        reject do |file|
+        excluded_paths.any? do |excluded_path|
+          Find.find(excluded_path)
+              .map { |excluded_file| Shellwords.escape(excluded_file) }
+              .include?(file)
+        end
+      end
     end
 
     # Parses the configuration file and return the excluded files
@@ -145,25 +146,25 @@ module Danger
     # @return [Array] list of files excluded
     def excluded_files_from_config(filepath)
       config = if filepath
-        YAML.load_file(filepath)
-      else
-        {"excluded" => []}
+                 YAML.load_file(filepath)
+               else
+                 { 'excluded' => [] }
       end
 
       excluded_paths = config['excluded'] || []
 
       # Extract excluded paths
-      return excluded_paths.
-        map { |path| File.join(File.dirname(filepath), path) }.
-        map { |path| File.expand_path(path) }.
-        select { |path| File.exists?(path) || Dir.exists?(path) }
+      excluded_paths
+        .map { |path| File.join(File.dirname(filepath), path) }
+        .map { |path| File.expand_path(path) }
+        .select { |path| File.exist?(path) || Dir.exist?(path) }
     end
 
     # Create a markdown table from swiftlint issues
     #
     # @return  [String]
-    def markdown_issues (results, heading)
-      message = "#### #{heading}\n\n"
+    def markdown_issues(results, heading)
+      message = +"#### #{heading}\n\n"
 
       message << "File | Line | Reason |\n"
       message << "| --- | ----- | ----- |\n"
@@ -182,11 +183,11 @@ module Danger
     # Send inline comment with danger's warn or fail method
     #
     # @return [void]
-    def send_inline_comment (results, method)
+    def send_inline_comment(results, method)
       dir = "#{Dir.pwd}/"
       results.each do |r|
-      filename = r['file'].gsub(dir, "")
-      send(method, r['reason'], file: filename, line: r['line'])
+        filename = r['file'].gsub(dir, '')
+        send(method, r['reason'], file: filename, line: r['line'])
       end
     end
 

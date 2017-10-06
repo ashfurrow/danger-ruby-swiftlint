@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path('../spec_helper', __FILE__)
 require_relative '../ext/swiftlint/swiftlint'
 
@@ -25,7 +27,7 @@ describe Swiftlint do
 
   it 'runs lint by default with options being optional' do
     expect(swiftlint).to receive(:`).with(including('swiftlint lint'))
-    swiftlint.run()
+    swiftlint.run
   end
 
   it 'runs accepting symbolized options' do
@@ -36,8 +38,6 @@ describe Swiftlint do
                   '',
                   use_stdin: false,
                   cache_path: '/path',
-                  enable_all_rules: true
-                  )
+                  enable_all_rules: true)
   end
 end
-
