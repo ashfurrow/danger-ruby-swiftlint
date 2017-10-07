@@ -28,6 +28,9 @@ module Danger
     # Allows you to specify a directory from where swiftlint will be run.
     attr_accessor :directory
 
+    # Provides additional logging diagnostic information.
+    attr_accessor :verbose
+
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of .markdown and .md files.
     #
@@ -47,14 +50,17 @@ module Danger
       else
         nil
       end
+      log "Using config file: #{config}"
       
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
+      log "Swiftlint will be run from #{dir_selected}"
 
       # Extract excluded paths
       excluded_paths = excluded_files_from_config(config)
 
       # Extract swift files (ignoring excluded ones)
       files = find_swift_files(files, excluded_paths, dir_selected)
+      log "Swiftlint will lint the following files: #{files.join(', ')}"
 
       # Prepare swiftlint options
       options = {
@@ -63,9 +69,11 @@ module Danger
         quiet: true,
         pwd: dir_selected
       }
+      log "linting with options: #{options}"
 
       # Lint each file and collect the results
       issues = run_swiftlint(files, options, additional_swiftlint_args)
+      log "Received from Swiftlint: #{issues}"
 
       # Filter warnings and errors
       warnings = issues.select { |issue| issue['severity'] == 'Warning' }
@@ -187,6 +195,10 @@ module Danger
     # @return [SwiftLint]
     def swiftlint
       Swiftlint.new(binary_path)
+    end
+
+    def log(text)
+      puts(text) if @verbose
     end
   end
 end
