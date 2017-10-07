@@ -41,9 +41,9 @@ module Danger
       raise "swiftlint is not installed" unless swiftlint.is_installed?
 
       config = if config_file
-        config_file
+        File.expand_path(config_file)
       elsif File.file?('.swiftlint.yml')
-        '.swiftlint.yml'
+        File.expand_path('.swiftlint.yml')
       else
         nil
       end
@@ -83,10 +83,10 @@ module Danger
           message << markdown_issues(errors, 'Errors') unless errors.empty?
           markdown message
 
-	  # Fail Danger on errors
-	  if fail_on_error && errors.count > 0
-	    fail "Failed due to SwiftLint errors"
-	  end
+          # Fail Danger on errors
+          if fail_on_error && errors.count > 0
+            fail "Failed due to SwiftLint errors"
+          end
         end
       end
     end
@@ -177,8 +177,8 @@ module Danger
     def send_inline_comment (results, method)
       dir = "#{Dir.pwd}/"
       results.each do |r|
-	filename = r['file'].gsub(dir, "")
-	send(method, r['reason'], file: filename, line: r['line'])
+      filename = r['file'].gsub(dir, "")
+      send(method, r['reason'], file: filename, line: r['line'])
       end
     end
 
