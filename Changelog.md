@@ -2,7 +2,12 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.10.1
+
 - Expands config paths to be absolute when passed to `swiftlint`.
+- Adds verbose logging option.
 
 ## 0.10.0
 
