@@ -28,6 +28,9 @@ module Danger
     # Allows you to specify a directory from where swiftlint will be run.
     attr_accessor :directory
 
+    # Provides additional logging diagnostic information.
+    attr_accessor :verbose
+
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of .markdown and .md files.
     #
@@ -41,20 +44,23 @@ module Danger
       raise "swiftlint is not installed" unless swiftlint.is_installed?
 
       config = if config_file
-        config_file
+        File.expand_path(config_file)
       elsif File.file?('.swiftlint.yml')
-        '.swiftlint.yml'
+        File.expand_path('.swiftlint.yml')
       else
         nil
       end
+      log "Using config file: #{config}"
       
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
+      log "Swiftlint will be run from #{dir_selected}"
 
       # Extract excluded paths
       excluded_paths = excluded_files_from_config(config)
 
       # Extract swift files (ignoring excluded ones)
       files = find_swift_files(files, excluded_paths, dir_selected)
+      log "Swiftlint will lint the following files: #{files.join(', ')}"
 
       # Prepare swiftlint options
       options = {
@@ -63,9 +69,11 @@ module Danger
         quiet: true,
         pwd: dir_selected
       }
+      log "linting with options: #{options}"
 
       # Lint each file and collect the results
       issues = run_swiftlint(files, options, additional_swiftlint_args)
+      log "Received from Swiftlint: #{issues}"
 
       # Filter warnings and errors
       warnings = issues.select { |issue| issue['severity'] == 'Warning' }
@@ -83,10 +91,10 @@ module Danger
           message << markdown_issues(errors, 'Errors') unless errors.empty?
           markdown message
 
-	  # Fail Danger on errors
-	  if fail_on_error && errors.count > 0
-	    fail "Failed due to SwiftLint errors"
-	  end
+          # Fail Danger on errors
+          if fail_on_error && errors.count > 0
+            fail "Failed due to SwiftLint errors"
+          end
         end
       end
     end
@@ -177,8 +185,8 @@ module Danger
     def send_inline_comment (results, method)
       dir = "#{Dir.pwd}/"
       results.each do |r|
-	filename = r['file'].gsub(dir, "")
-	send(method, r['reason'], file: filename, line: r['line'])
+      filename = r['file'].gsub(dir, "")
+      send(method, r['reason'], file: filename, line: r['line'])
       end
     end
 
@@ -187,6 +195,10 @@ module Danger
     # @return [SwiftLint]
     def swiftlint
       Swiftlint.new(binary_path)
+    end
+
+    def log(text)
+      puts(text) if @verbose
     end
   end
 end

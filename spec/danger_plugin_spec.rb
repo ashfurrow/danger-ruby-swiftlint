@@ -156,6 +156,51 @@ module Danger
           @swiftlint.lint_files
         end
 
+        it 'default config is nil, unspecified' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+            'spec/fixtures/SwiftFile.swift',
+          ])
+
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(:config => nil), '')
+            .once
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files
+        end
+
+        it 'expands default config file (if present) to absolute path' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+            'spec/fixtures/SwiftFile.swift',
+          ])
+          expect(File).to receive(:file?).and_return(true)
+          expect(YAML).to receive(:load_file).and_return({})
+
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(:config => File.expand_path('.swiftlint.yml')), '')
+            .once
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files
+        end
+
+        it 'expands specified config file to absolute path' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+            'spec/fixtures/SwiftFile.swift',
+          ])
+
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(:config => File.expand_path('spec/fixtures/some_config.yml')), '')
+            .once
+            .and_return(@swiftlint_response)
+
+          @swiftlint.config_file = 'spec/fixtures/some_config.yml'
+          @swiftlint.lint_files
+        end
+
         it 'does not lint deleted files paths' do
           # Danger (4.3.0 at the time of writing) returns deleted files in the
           # modified fiels array, which kinda makes sense.

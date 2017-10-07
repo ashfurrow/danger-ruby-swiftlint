@@ -50,6 +50,8 @@ swiftlint.lint_files additional_swiftlint_args: '--lenient'
 
 You can use the `SWIFTLINT_VERSION` environment variable to override the default version installed via the `rake install` task.
 
+Finally, if something's not working correctly, you can debug this plugin by using setting `swiftlint.verbose = true`.
+
 ## Attribution
 
 Original structure, sequence, and organization of repo taken from [danger-prose](https://github.com/dbgrandi/danger-prose) by [David Grandinetti](https://github.com/dbgrandi/).
