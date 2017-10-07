@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Expands config paths to be absolute when passed to `swiftlint`.
 
 ## 0.10.0
 
