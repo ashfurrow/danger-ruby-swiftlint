@@ -4,6 +4,9 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'danger'
+gem 'danger-rubocop'
+
 group :development do
   gem 'bacon'
   gem 'mocha'
