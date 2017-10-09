@@ -1,5 +1,5 @@
 # Disable linting of Dangerfile.
-AllCops:
+Style/FrozenStringLiteralComment:
   Exclude:
     - 'Dangerfile'
 # Customize some cops.
