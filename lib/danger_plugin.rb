@@ -47,12 +47,10 @@ module Danger
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
       config = if config_file
-        File.expand_path(config_file)
-      elsif File.file?('.swiftlint.yml')
-        File.expand_path('.swiftlint.yml')
-      else
-        nil
-      end
+                 File.expand_path(config_file)
+               elsif File.file?('.swiftlint.yml')
+                 File.expand_path('.swiftlint.yml')
+               end
       log "Using config file: #{config}"
 
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
@@ -95,7 +93,7 @@ module Danger
 
         # Fail Danger on errors
         if fail_on_error && errors.count.positive?
-          fail 'Failed due to SwiftLint errors'
+          raise 'Failed due to SwiftLint errors'
         end
       end
     end
