@@ -1,3 +1,26 @@
+# Disable linting of Dangerfile.
+AllCops:
+  Exclude:
+    - 'Dangerfile'
+# Customize some cops.
 Metrics/LineLength:
+  Max: 120
   Exclude:
     - '*.gemspec'
+Metrics/ClassLength:
+  Max: 120
+
+# The danger_plugin.rb file presents unique challenges, ignore it.
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/danger_plugin.rb'
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'lib/danger_plugin.rb'
+
+# I just don't like these ones.
+Metrics/AbcSize:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
