@@ -1,31 +1,33 @@
+# frozen_string_literal: true
+
 require File.expand_path('../spec_helper', __FILE__)
 require_relative '../ext/swiftlint/swiftlint'
 
 describe Swiftlint do
   let(:swiftlint) { Swiftlint.new }
-  it 'is_installed? works based on bin/swiftlint file' do
-    expect(File).to receive(:exist?).with(/bin\/swiftlint/).and_return(true)
-    expect(swiftlint.is_installed?).to be_truthy
+  it 'installed? works based on bin/swiftlint file' do
+    expect(File).to receive(:exist?).with(%r{/bin\/swiftlint}).and_return(true)
+    expect(swiftlint.installed?).to be_truthy
 
-    expect(File).to receive(:exist?).with(/bin\/swiftlint/).and_return(false)
-    expect(swiftlint.is_installed?).to be_falsy
+    expect(File).to receive(:exist?).with(%r{bin\/swiftlint}).and_return(false)
+    expect(swiftlint.installed?).to be_falsy
   end
 
   context 'with binary_path' do
     let(:binary_path) { '/path/to/swiftlint' }
     let(:swiftlint) { Swiftlint.new(binary_path) }
-    it 'is_installed? works based on specific path' do
+    it 'installed? works based on specific path' do
       expect(File).to receive(:exist?).with(binary_path).and_return(true)
-      expect(swiftlint.is_installed?).to be_truthy
+      expect(swiftlint.installed?).to be_truthy
 
       expect(File).to receive(:exist?).with(binary_path).and_return(false)
-      expect(swiftlint.is_installed?).to be_falsy
+      expect(swiftlint.installed?).to be_falsy
     end
   end
 
   it 'runs lint by default with options being optional' do
     expect(swiftlint).to receive(:`).with(including('swiftlint lint'))
-    swiftlint.run()
+    swiftlint.run
   end
 
   it 'runs accepting symbolized options' do
@@ -36,8 +38,6 @@ describe Swiftlint do
                   '',
                   use_stdin: false,
                   cache_path: '/path',
-                  enable_all_rules: true
-                  )
+                  enable_all_rules: true)
   end
 end
-

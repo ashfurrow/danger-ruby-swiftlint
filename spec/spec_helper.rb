@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 require 'pathname'
 
 ROOT = Pathname.new(File.expand_path('../../', __FILE__))
-$:.unshift((ROOT + 'lib').to_s)
-$:.unshift((ROOT + 'spec').to_s)
+$LOAD_PATH.unshift((ROOT + 'lib').to_s)
+$LOAD_PATH.unshift((ROOT + 'spec').to_s)
 
 RSpec.configure do |config|
- # Use color in STDOUT
+  # Use color in STDOUT
   config.color = true
 end
 
 RSpec::Matchers.define :including do |x|
-  match { |actual| actual.include? x  }
+  match { |actual| actual.include? x }
 end
 
 require 'bundler/setup'
@@ -32,11 +34,11 @@ end
 # running a PR on TravisCI
 def testing_env
   {
-    "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
-    "TRAVIS_PULL_REQUEST" => "800",
-    "TRAVIS_REPO_SLUG" => "artsy/eigen",
-    "TRAVIS_COMMIT_RANGE" => "759adcbd0d8f...13c4dc8bb61d",
-    "DANGER_GITHUB_API_TOKEN" => "123sbdq54erfsd3422gdfio"
+    'HAS_JOSH_K_SEAL_OF_APPROVAL' => 'true',
+    'TRAVIS_PULL_REQUEST' => '800',
+    'TRAVIS_REPO_SLUG' => 'artsy/eigen',
+    'TRAVIS_COMMIT_RANGE' => '759adcbd0d8f...13c4dc8bb61d',
+    'DANGER_GITHUB_API_TOKEN' => '123sbdq54erfsd3422gdfio'
   }
 end
 

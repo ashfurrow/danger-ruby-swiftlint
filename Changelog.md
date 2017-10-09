@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Integrates Rubocop linter to ensure code quality. See [#61](https://github.com/ashfurrow/danger-swiftlint/pull/61).
 
 ## 0.10.1
 
