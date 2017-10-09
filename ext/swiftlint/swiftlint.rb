@@ -1,6 +1,6 @@
-
 # frozen_string_literal: true
 
+# A wrapper to use SwiftLint via a Ruby API.
 class Swiftlint
   def initialize(swiftlint_path = nil)
     @swiftlint_path = swiftlint_path
@@ -21,7 +21,7 @@ class Swiftlint
   end
 
   # Return true if swiftlint is installed or false otherwise
-  def is_installed?
+  def installed?
     File.exist?(swiftlint_path)
   end
 

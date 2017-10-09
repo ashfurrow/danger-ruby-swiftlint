@@ -7,6 +7,7 @@ end
 require 'thor'
 require 'version'
 
+# The class defining the CLI interface of the plugin.
 class DangerSwiftlintCLI < Thor
   desc 'version', 'The version of the installed danger-swiftlint plugin'
   def version

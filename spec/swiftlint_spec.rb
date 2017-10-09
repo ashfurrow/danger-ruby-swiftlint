@@ -5,23 +5,23 @@ require_relative '../ext/swiftlint/swiftlint'
 
 describe Swiftlint do
   let(:swiftlint) { Swiftlint.new }
-  it 'is_installed? works based on bin/swiftlint file' do
-    expect(File).to receive(:exist?).with(/bin\/swiftlint/).and_return(true)
-    expect(swiftlint.is_installed?).to be_truthy
+  it 'installed? works based on bin/swiftlint file' do
+    expect(File).to receive(:exist?).with(%r{/bin\/swiftlint}).and_return(true)
+    expect(swiftlint.installed?).to be_truthy
 
-    expect(File).to receive(:exist?).with(/bin\/swiftlint/).and_return(false)
-    expect(swiftlint.is_installed?).to be_falsy
+    expect(File).to receive(:exist?).with(%r{bin\/swiftlint}).and_return(false)
+    expect(swiftlint.installed?).to be_falsy
   end
 
   context 'with binary_path' do
     let(:binary_path) { '/path/to/swiftlint' }
     let(:swiftlint) { Swiftlint.new(binary_path) }
-    it 'is_installed? works based on specific path' do
+    it 'installed? works based on specific path' do
       expect(File).to receive(:exist?).with(binary_path).and_return(true)
-      expect(swiftlint.is_installed?).to be_truthy
+      expect(swiftlint.installed?).to be_truthy
 
       expect(File).to receive(:exist?).with(binary_path).and_return(false)
-      expect(swiftlint.is_installed?).to be_falsy
+      expect(swiftlint.installed?).to be_falsy
     end
   end
 

@@ -15,7 +15,7 @@ module Danger
       end
 
       it 'handles swiftlint not being installed' do
-        allow_any_instance_of(Swiftlint).to receive(:is_installed?).and_return(false)
+        allow_any_instance_of(Swiftlint).to receive(:installed?).and_return(false)
         expect { @swiftlint.lint_files }.to raise_error('swiftlint is not installed')
       end
 
@@ -37,7 +37,7 @@ module Danger
 
       describe :lint_files do
         before do
-          allow_any_instance_of(Swiftlint).to receive(:is_installed?).and_return(true)
+          allow_any_instance_of(Swiftlint).to receive(:installed?).and_return(true)
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([])
 
