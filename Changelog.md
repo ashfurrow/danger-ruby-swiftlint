@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.10.2
+
 - Integrates Rubocop linter to ensure code quality. See [#61](https://github.com/ashfurrow/danger-swiftlint/pull/61).
 - Fixes issue where `directory` variable was not escaped. See [62](https://github.com/ashfurrow/danger-swiftlint/issues/62).
 
