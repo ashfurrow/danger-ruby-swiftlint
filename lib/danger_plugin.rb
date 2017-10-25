@@ -53,7 +53,7 @@ module Danger
                end
       log "Using config file: #{config}"
 
-      dir_selected = directory ? File.expand_path(directory) : Dir.pwd
+      dir_selected = directory ? File.expand_path(directory) : Shellwords.escape(Dir.pwd)
       log "Swiftlint will be run from #{dir_selected}"
 
       # Extract excluded paths

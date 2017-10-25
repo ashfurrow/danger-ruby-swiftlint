@@ -90,6 +90,17 @@ module Danger
           expect(output).to_not be_empty
         end
 
+        it 'uses escaped pwd when directory is not set' do
+          allow_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(pwd: File.expand_path('.')), '')
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files(['spec/fixtures/some\ dir/SwiftFile.swift'])
+
+          output = @swiftlint.status_report[:markdowns].first.to_s
+          expect(output).to_not be_empty
+        end
+
         it 'only lint files specified in custom dir' do
           @swiftlint.directory = 'spec/fixtures/some_dir'
 
