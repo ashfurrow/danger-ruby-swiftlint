@@ -30,7 +30,7 @@ module Danger
     attr_accessor :directory
 
     # Maximum number of issues to be reported.
-    attr_accessor :limit
+    attr_accessor :max_num_violations
 
     # Provides additional logging diagnostic information.
     attr_accessor :verbose
@@ -78,9 +78,9 @@ module Danger
       # Lint each file and collect the results
       issues = run_swiftlint(files, options, additional_swiftlint_args)
       other_issues_count = 0
-      unless @limit.nil?
-        other_issues_count = issues.count - @limit if issues.count > @limit
-        issues = issues.take(@limit)
+      unless @max_num_violations.nil?
+        other_issues_count = issues.count - @max_num_violations if issues.count > @max_num_violations
+        issues = issues.take(@max_num_violations)
       end
       log "Received from Swiftlint: #{issues}"
 
