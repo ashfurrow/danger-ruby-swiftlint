@@ -92,13 +92,13 @@ module Danger
         # Report with inline comment
         send_inline_comment(warnings, 'warn')
         send_inline_comment(errors, 'fail')
-        warn other_issues_message(other_issues_count) if other_issues_count > 0
+        warn other_issues_message(other_issues_count) if other_issues_count.positive?
       elsif warnings.count.positive? || errors.count.positive?
         # Report if any warning or error
         message = +"### SwiftLint found issues\n\n"
         message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
         message << markdown_issues(errors, 'Errors') unless errors.empty?
-        message << "\n#{other_issues_message(other_issues_count)}" if other_issues_count > 0
+        message << "\n#{other_issues_message(other_issues_count)}" if other_issues_count.positive?
         markdown message
 
         # Fail Danger on errors
@@ -204,11 +204,7 @@ module Danger
     end
 
     def other_issues_message(issues_count)
-      violations = if issues_count == 1
-                    "violation"
-                  else
-                    "violations"
-                  end
+      violations = issues_count == 1 ? 'violation' : 'violations'
       "SwiftLint also found #{issues_count} more #{violations} with this PR."
     end
 
