@@ -91,10 +91,9 @@ module Danger
         end
 
         it 'uses escaped pwd when directory is not set' do
-
           allow_any_instance_of(Swiftlint).to receive(:lint)
-          .with(hash_including(pwd: File.expand_path('.')), '')
-          .and_return(@swiftlint_response)
+            .with(hash_including(pwd: File.expand_path('.')), '')
+            .and_return(@swiftlint_response)
 
           @swiftlint.lint_files(['spec/fixtures/some\ dir/SwiftFile.swift'])
 
