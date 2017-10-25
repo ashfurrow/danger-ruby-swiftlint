@@ -68,6 +68,7 @@ module Danger
           output = @swiftlint.status_report[:markdowns].first.to_s
           expect(output).to include('SwiftLint found issues')
           expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+          expect(output).to include('SwiftLint also found 1 more violation with this PR.')
           expect(output).to_not include('SwiftFile.swift | 14 | Force casts should be avoided.')
         end
 
