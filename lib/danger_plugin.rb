@@ -29,6 +29,9 @@ module Danger
     # Allows you to specify a directory from where swiftlint will be run.
     attr_accessor :directory
 
+    # Maximum number of issues to be reported.
+    attr_accessor :limit
+
     # Provides additional logging diagnostic information.
     attr_accessor :verbose
 
@@ -74,6 +77,7 @@ module Danger
 
       # Lint each file and collect the results
       issues = run_swiftlint(files, options, additional_swiftlint_args)
+      issues = issues.take(limit) unless @limit.nil?
       log "Received from Swiftlint: #{issues}"
 
       # Filter warnings and errors
