@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.11.0
+
 - Allows setting the maximum number of issues being reported in a PR. See [#65](https://github.com/ashfurrow/danger-swiftlint/pull/65).
 
 ## 0.10.2
