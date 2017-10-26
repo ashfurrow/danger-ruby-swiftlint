@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Removes test fixtures from gemspec.
 
 ## 0.11.0
 
