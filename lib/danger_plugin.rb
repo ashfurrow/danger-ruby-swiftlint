@@ -29,6 +29,9 @@ module Danger
     # Allows you to specify a directory from where swiftlint will be run.
     attr_accessor :directory
 
+    # Maximum number of issues to be reported.
+    attr_accessor :max_num_violations
+
     # Provides additional logging diagnostic information.
     attr_accessor :verbose
 
@@ -74,6 +77,11 @@ module Danger
 
       # Lint each file and collect the results
       issues = run_swiftlint(files, options, additional_swiftlint_args)
+      other_issues_count = 0
+      unless @max_num_violations.nil?
+        other_issues_count = issues.count - @max_num_violations if issues.count > @max_num_violations
+        issues = issues.take(@max_num_violations)
+      end
       log "Received from Swiftlint: #{issues}"
 
       # Filter warnings and errors
@@ -84,11 +92,13 @@ module Danger
         # Report with inline comment
         send_inline_comment(warnings, 'warn')
         send_inline_comment(errors, 'fail')
+        warn other_issues_message(other_issues_count) if other_issues_count.positive?
       elsif warnings.count.positive? || errors.count.positive?
         # Report if any warning or error
         message = +"### SwiftLint found issues\n\n"
         message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
         message << markdown_issues(errors, 'Errors') unless errors.empty?
+        message << "\n#{other_issues_message(other_issues_count)}" if other_issues_count.positive?
         markdown message
 
         # Fail Danger on errors
@@ -191,6 +201,11 @@ module Danger
         filename = r['file'].gsub(dir, '')
         send(method, r['reason'], file: filename, line: r['line'])
       end
+    end
+
+    def other_issues_message(issues_count)
+      violations = issues_count == 1 ? 'violation' : 'violations'
+      "SwiftLint also found #{issues_count} more #{violations} with this PR."
     end
 
     # Make SwiftLint object for binary_path

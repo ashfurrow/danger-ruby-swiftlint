@@ -56,6 +56,22 @@ module Danger
           expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
         end
 
+        it 'sets maxium number of violations' do
+          swiftlint_response = '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 13 }, { "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 14 }]'
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .and_return(swiftlint_response)
+
+          @swiftlint.max_num_violations = 1
+          @swiftlint.lint_files('spec/fixtures/*.swift')
+
+          output = @swiftlint.status_report[:markdowns].first.to_s
+          expect(output).to include('SwiftLint found issues')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+          expect(output).to include('SwiftLint also found 1 more violation with this PR.')
+          expect(output).to_not include('SwiftFile.swift | 14 | Force casts should be avoided.')
+        end
+
         it 'accepts additional cli arguments' do
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '--lenient')

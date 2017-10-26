@@ -27,6 +27,7 @@ That's going to lint all your Swift files. It would be better to only lint the c
 ```rb
 swiftlint.config_file = '.swiftlint.yml'
 swiftlint.binary_path = '/path/to/swiftlint'
+swiftlint.limit = 20
 swiftlint.lint_files
 ```
 
