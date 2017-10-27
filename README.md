@@ -22,7 +22,7 @@ The easiest way to use is just add this to your Dangerfile:
 swiftlint.lint_files
 ```
 
-That's going to lint all your Swift files. It would be better to only lint the changed or added ones, which is complicated due. Check out [this issue](https://github.com/ashfurrow/danger-swiftlint/issues/16) for more details.
+By default danger-swiftlint will lint added and modified files. 
 
 ```rb
 swiftlint.config_file = '.swiftlint.yml'
@@ -32,6 +32,12 @@ swiftlint.lint_files
 ```
 
 If you want the lint result shows in diff instead of comment, you can use `inline_mode` option. Violations that out of the diff will show in danger's fail or warn section.
+
+```rb
+swiftlint.directory "Directory A"
+```
+
+Lint different directories individually
 
 ```rb
 swiftlint.lint_files inline_mode: true
