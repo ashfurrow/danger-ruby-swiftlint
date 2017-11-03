@@ -3,6 +3,7 @@
 ## Current Master
 
 - Removes test fixtures from gemspec.
+- Fixes [#68](https://github.com/ashfurrow/danger-swiftlint/issues/68), specifying a config file directly should work again.
 
 ## 0.11.0
 
