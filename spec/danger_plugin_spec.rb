@@ -221,7 +221,7 @@ module Danger
                                                                        ])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
-            .with(hash_including(config: File.expand_path('spec/fixtures/some_config.yml')), '')
+            .with(hash_including(config: 'spec/fixtures/some_config.yml'), '')
             .once
             .and_return(@swiftlint_response)
 

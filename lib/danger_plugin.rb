@@ -50,7 +50,7 @@ module Danger
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
       config = if config_file
-                 File.expand_path(config_file)
+                 config_file
                elsif File.file?('.swiftlint.yml')
                  File.expand_path('.swiftlint.yml')
                end
