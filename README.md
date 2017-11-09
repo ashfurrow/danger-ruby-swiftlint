@@ -34,13 +34,13 @@ swiftlint.lint_files
 If you want the lint result shows in diff instead of comment, you can use `inline_mode` option. Violations that out of the diff will show in danger's fail or warn section.
 
 ```rb
-swiftlint.directory "Directory A"
+swiftlint.lint_files inline_mode: true
 ```
 
 If you want different configurations on different directories, you can specify the directory. Note: Run `swiftlint.lint_files` per specified directory then.
 
 ```rb
-swiftlint.lint_files inline_mode: true
+swiftlint.directory "Directory A"
 ```
 
 If you want lint errors to fail Danger, you can use `fail_on_error` option.
