@@ -56,7 +56,7 @@ module Danger
                end
       log "Using config file: #{config}"
 
-      dir_selected = directory ? File.expand_path(directory) : Shellwords.escape(Dir.pwd)
+      dir_selected = directory ? File.expand_path(directory) : Dir.pwd
       log "Swiftlint will be run from #{dir_selected}"
 
       # Extract excluded paths
@@ -68,7 +68,8 @@ module Danger
 
       # Prepare swiftlint options
       options = {
-        config: config,
+        # Make sure we don't fail when config path has spaces
+        config: config ? Shellwords.escape(config) : nil,
         reporter: 'json',
         quiet: true,
         pwd: dir_selected
@@ -125,22 +126,23 @@ module Danger
     #
     # @return [Array] swift files
     def find_swift_files(dir_selected, files = nil, excluded_paths = [])
+      # Needs to be escaped before comparsion with escaped file paths
+      dir_selected = Shellwords.escape(dir_selected)
+
       # Assign files to lint
       files = if files.nil?
                 (git.modified_files - git.deleted_files) + git.added_files
               else
                 Dir.glob(files)
               end
-
       # Filter files to lint
       files.
         # Ensure only swift files are selected
         select { |file| file.end_with?('.swift') }.
         # Make sure we don't fail when paths have spaces
-        map { |file| Shellwords.escape(file) }.
+        map { |file| Shellwords.escape(File.expand_path(file)) }.
         # Remove dups
-        uniq
-           .map { |file| File.expand_path(file) }.
+        uniq.
         # Ensure only files in the selected directory
         select { |file| file.start_with?(dir_selected) }.
         # Reject files excluded on configuration
