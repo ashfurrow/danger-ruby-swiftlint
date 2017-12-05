@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.11.1
+
 - Removes test fixtures from gemspec.
 - Fixes [#68](https://github.com/ashfurrow/danger-swiftlint/issues/68), specifying a config file directly should work again.
 - Fixes issue with non-escaping paths. Reverts [#63](https://github.com/ashfurrow/danger-swiftlint/pull/63).
