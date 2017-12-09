@@ -1,8 +1,8 @@
-[![CircleCI](https://circleci.com/gh/ashfurrow/danger-swiftlint.svg?style=svg)](https://circleci.com/gh/ashfurrow/danger-swiftlint)
+[![CircleCI](https://circleci.com/gh/ashfurrow/danger-ruby-swiftlint.svg?style=svg)](https://circleci.com/gh/ashfurrow/danger-ruby-swiftlint)
 
 # Danger SwiftLint
 
-A [Danger](https://github.com/danger/danger) plugin for [SwiftLint](https://github.com/realm/SwiftLint) that runs on macOS.
+A [Danger Ruby](https://github.com/danger/danger) plugin for [SwiftLint](https://github.com/realm/SwiftLint) that runs on macOS.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Add this line to your Gemfile:
 gem 'danger-swiftlint'
 ```
 
-SwiftLint also needs to be installed before you run Danger, which you can do [via Homebrew](https://github.com/realm/SwiftLint#installation) or a [Brewfile](https://github.com/Homebrew/homebrew-bundle).
+SwiftLint also needs to be installed before you run Danger, which you can do [via Homebrew](https://github.com/realm/SwiftLint#installation) or a [Brewfile](https://github.com/Homebrew/homebrew-bundle). On CI, this is done for you when the gem is installed.
 
 ## Usage
 
