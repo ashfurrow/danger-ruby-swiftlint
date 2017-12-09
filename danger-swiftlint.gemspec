@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['ash@ashfurrow.com', 'dbgrandi@gmail.com', 'orta.therox@gmail.com', 'thiago@thiagofelix.com', 'gio@mokacoding.com']
   spec.description   = 'A Danger plugin for linting Swift with SwiftLint.'
   spec.summary       = 'A Danger plugin for linting Swift with SwiftLint.'
-  spec.homepage      = 'https://github.com/ashfurrow/danger-swiftlint'
+  spec.homepage      = 'https://github.com/ashfurrow/danger-ruby-swiftlint'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\0").select { |f| f.end_with? 'rb' }
