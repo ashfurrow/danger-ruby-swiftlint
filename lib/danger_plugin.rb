@@ -153,27 +153,28 @@ module Danger
         # Ensure only files in the selected directory
         select { |file| file.start_with?(dir_selected) }.
         # Reject files excluded on configuration
-        reject do |file|
-          excluded_paths.any? do |excluded_path|
-            Find.find(excluded_path)
-                .map { |excluded_file| Shellwords.escape(excluded_file) }
-                .include?(file)
-          end
-        end.
+        reject { |file| file_exists?(excluded_paths, file) }.
         # Accept files included on configuration
         select do |file|
         next true if included_paths.empty?
-        included_paths.any? do |included_path|
-          Find.find(included_path)
-              .map { |included_file| Shellwords.escape(included_file) }
-              .include?(file)
-        end
+        file_exists?(included_paths, file)
       end
     end
 
     # Get the configuration file
     def load_config(filepath)
       filepath ? YAML.load_file(filepath) : {}
+    end
+
+    # Return whether the file exists within a specified collection of paths
+    #
+    # @return [Bool] file exists within specified collection of paths
+    def file_exists?(paths, file)
+      paths.any? do |path|
+        Find.find(path)
+            .map { |path_file| Shellwords.escape(path_file) }
+            .include?(file)
+      end
     end
 
     # Parses the configuration file and return the specified files in path
