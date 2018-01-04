@@ -49,27 +49,34 @@ module Danger
       # Fails if swiftlint isn't installed
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
-      config = if config_file
-                 config_file
-               elsif File.file?('.swiftlint.yml')
-                 File.expand_path('.swiftlint.yml')
-               end
-      log "Using config file: #{config}"
+      config_file_path = if config_file
+        config_file
+      elsif File.file?('.swiftlint.yml')
+        File.expand_path('.swiftlint.yml')
+      end
+      log "Using config file: #{config_file_path}"
 
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
       log "Swiftlint will be run from #{dir_selected}"
 
+      # Get config
+      config = load_config(config_file_path)
+
       # Extract excluded paths
-      excluded_paths = excluded_files_from_config(config)
+      excluded_paths = format_paths(config['excluded'] || [], config_file_path)
+
+      # Extract included paths
+      included_paths = format_paths(config['included'] || [], config_file_path)
 
       # Extract swift files (ignoring excluded ones)
-      files = find_swift_files(dir_selected, files, excluded_paths)
+      files = find_swift_files(dir_selected, files, excluded_paths, included_paths)
+      log files
       log "Swiftlint will lint the following files: #{files.join(', ')}"
 
       # Prepare swiftlint options
       options = {
         # Make sure we don't fail when config path has spaces
-        config: config ? Shellwords.escape(config) : nil,
+        config: config_file_path ? Shellwords.escape(config_file_path) : nil,
         reporter: 'json',
         quiet: true,
         pwd: dir_selected
@@ -125,7 +132,7 @@ module Danger
     # If files are not provided it will use git modifield and added files
     #
     # @return [Array] swift files
-    def find_swift_files(dir_selected, files = nil, excluded_paths = [])
+    def find_swift_files(dir_selected, files = nil, excluded_paths = [], included_paths = [])
       # Needs to be escaped before comparsion with escaped file paths
       dir_selected = Shellwords.escape(dir_selected)
 
@@ -151,24 +158,33 @@ module Danger
           Find.find(excluded_path)
               .map { |excluded_file| Shellwords.escape(excluded_file) }
               .include?(file)
-        end
+            end
+        end.
+        # Accept files included on configuration
+        select do |file|
+          next true if included_paths.empty?
+          included_paths.any? do |included_path|
+            Find.find(included_path)
+              .map { |included_file| Shellwords.escape(included_file) }
+              .include?(file)
+          end
       end
     end
 
-    # Parses the configuration file and return the excluded files
+    # Get the configuration file
+    def load_config(filepath)
+      if filepath
+        return YAML.load_file(filepath)
+      end
+      return {}
+    end
+
+    # Parses the configuration file and return the specified files in path
     #
-    # @return [Array] list of files excluded
-    def excluded_files_from_config(filepath)
-      config = if filepath
-                 YAML.load_file(filepath)
-               else
-                 { 'excluded' => [] }
-               end
-
-      excluded_paths = config['excluded'] || []
-
-      # Extract excluded paths
-      excluded_paths
+    # @return [Array] list of files specified in path
+    def format_paths(paths, filepath)
+      # Extract included paths
+      paths
         .map { |path| File.join(File.dirname(filepath), path) }
         .map { |path| File.expand_path(path) }
         .select { |path| File.exist?(path) || Dir.exist?(path) }
