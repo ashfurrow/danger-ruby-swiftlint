@@ -50,10 +50,10 @@ module Danger
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
       config_file_path = if config_file
-                 config_file
-               elsif File.file?('.swiftlint.yml')
-                 File.expand_path('.swiftlint.yml')
-               end
+                           config_file
+                         elsif File.file?('.swiftlint.yml')
+                           File.expand_path('.swiftlint.yml')
+                         end
       log "Using config file: #{config_file_path}"
 
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
@@ -154,29 +154,26 @@ module Danger
         select { |file| file.start_with?(dir_selected) }.
         # Reject files excluded on configuration
         reject do |file|
-        excluded_paths.any? do |excluded_path|
-          Find.find(excluded_path)
-              .map { |excluded_file| Shellwords.escape(excluded_file) }
-              .include?(file)
-            end
+          excluded_paths.any? do |excluded_path|
+            Find.find(excluded_path)
+                .map { |excluded_file| Shellwords.escape(excluded_file) }
+                .include?(file)
+          end
         end.
         # Accept files included on configuration
         select do |file|
-          next true if included_paths.empty?
-          included_paths.any? do |included_path|
-            Find.find(included_path)
+        next true if included_paths.empty?
+        included_paths.any? do |included_path|
+          Find.find(included_path)
               .map { |included_file| Shellwords.escape(included_file) }
               .include?(file)
-          end
+        end
       end
     end
 
     # Get the configuration file
     def load_config(filepath)
-      if filepath
-        return YAML.load_file(filepath)
-      end
-      return {}
+      filepath ? YAML.load_file(filepath) : {}
     end
 
     # Parses the configuration file and return the specified files in path

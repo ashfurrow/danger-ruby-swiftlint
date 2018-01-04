@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Utilize included rule when finding files
 
 ## 0.11.1
 
