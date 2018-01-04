@@ -8,7 +8,7 @@ Metrics/LineLength:
   Exclude:
     - '*.gemspec'
 Metrics/ClassLength:
-  Max: 120
+  Max: 140
 
 # The danger_plugin.rb file presents unique challenges, ignore it.
 Metrics/MethodLength:
@@ -23,4 +23,3 @@ Metrics/AbcSize:
   Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: false
-
