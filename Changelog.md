@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Utilize included rule when finding files
+- Utilize `included` rule when finding files. See [#79](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/79)
 
 ## 0.11.1
 
