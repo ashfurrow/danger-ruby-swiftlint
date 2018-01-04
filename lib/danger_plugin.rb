@@ -50,10 +50,10 @@ module Danger
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
       config_file_path = if config_file
-        config_file
-      elsif File.file?('.swiftlint.yml')
-        File.expand_path('.swiftlint.yml')
-      end
+                 config_file
+               elsif File.file?('.swiftlint.yml')
+                 File.expand_path('.swiftlint.yml')
+               end
       log "Using config file: #{config_file_path}"
 
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
