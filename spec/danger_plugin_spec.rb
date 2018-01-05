@@ -169,6 +169,22 @@ module Danger
           @swiftlint.lint_files
         end
 
+        it 'lints files in the included paths' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFile.swift',
+                                                                         'spec/fixtures/some_dir/SwiftFile.swift'
+                                                                       ])
+
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .once
+            .and_return(@swiftlint_response)
+
+          @swiftlint.config_file = 'spec/fixtures/another_config.yml'
+          @swiftlint.lint_files
+        end
+
         it 'does not crash when excluded is nil' do
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([
@@ -181,6 +197,21 @@ module Danger
             .and_return(@swiftlint_response)
 
           @swiftlint.config_file = 'spec/fixtures/empty_excluded.yml'
+          @swiftlint.lint_files
+        end
+
+        it 'does not crash when included is nil' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFile.swift'
+                                                                       ])
+
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .once
+            .and_return(@swiftlint_response)
+
+          @swiftlint.config_file = 'spec/fixtures/empty_included.yml'
           @swiftlint.lint_files
         end
 
