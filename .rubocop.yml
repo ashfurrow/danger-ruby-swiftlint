@@ -24,3 +24,6 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
+# For Ruby 2.2 compatibility
+Style/NumericPredicate:
+  Enabled: false
