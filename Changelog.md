@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Fixes compatibility with Ruby 2.2.x and older. See [#83](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/83).
 
 ## 0.12.0
 
