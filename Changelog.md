@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Fixes example code in README.md.
 
 ## 0.12.1
 
