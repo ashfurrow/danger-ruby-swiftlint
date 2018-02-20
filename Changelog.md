@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.13.0
+
+- Fixes problem with frozen string literals by requiring Ruby 2.3 or higher. See [#88](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/88).
+
 ## 0.12.1
 
 - Fixes compatibility with Ruby 2.2.x and older. See [#83](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/83).
