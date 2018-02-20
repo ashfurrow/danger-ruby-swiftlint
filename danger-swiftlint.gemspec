@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.extensions    = %w[ext/swiftlint/Rakefile]
   spec.executables   = ['danger-swiftlint']
+  spec.required_ruby_version = '>= 2.3'
 
   spec.add_dependency 'danger'
   spec.add_dependency 'thor', '~> 0.19'
