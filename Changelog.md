@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nohthing yet!
+
+## 0.13.1
+
 - Fixes Danger crashing on `fail_on_error: true`. See [#90](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/90).
 
 ## 0.13.0
