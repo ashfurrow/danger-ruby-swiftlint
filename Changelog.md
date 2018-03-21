@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.14.0
+
 - Updated to SwiftLint version [0.25.0](https://github.com/realm/SwiftLint/releases/tag/0.25.0)
 
 ## 0.13.1
