@@ -282,16 +282,39 @@ module Danger
           @swiftlint.lint_files
         end
 
-        it 'generates errors instead of markdown when use inline mode' do
+        it 'generates errors/warnings instead of markdown when use inline mode' do
+          allow_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, additional_swiftlint_args: '')
+
+          status = @swiftlint.status_report
+          expect(status[:errors] + status[:warnings]).to_not be_empty
+          expect(status[:markdowns]).to be_empty
+        end
+
+        it 'generate errors in inline_mode when fail_on_error' do
+          allow_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: true, additional_swiftlint_args: '')
+          
+          status = @swiftlint.status_report
+          expect(status[:errors]).to_not be_empty
+        end
+
+        it 'generate only warnings in inline_mode when fail_on_error is false' do
           allow_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
             .and_return(@swiftlint_response)
 
           @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
-
+          
           status = @swiftlint.status_report
-          expect(status[:errors]).to_not be_empty
-          expect(status[:markdowns]).to be_empty
+          expect(status[:warnings]).to_not be_empty
+          expect(status[:errors]).to be_empty
         end
       end
     end
