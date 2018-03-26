@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.15.0
+
 - **Breaking Change**: for anyone using `inline_mode: true`, we now respect `fail_on_error`, which is `false` by default. Set `fail_on_error: true` to restore previous behaviour. See [#91](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/91).
 - Refactors to use symbols instead of strings for `send` function.
 
