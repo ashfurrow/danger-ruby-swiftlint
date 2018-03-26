@@ -27,3 +27,6 @@ Metrics/CyclomaticComplexity:
 # For Ruby 2.2 compatibility
 Style/NumericPredicate:
   Enabled: false
+
+Style/SignalException:
+  Enabled: false
