@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Respect `fail_on_error` when `inline_mode` is true. See [#91](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/91).
 
 ## 0.14.0
 

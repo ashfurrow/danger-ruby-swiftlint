@@ -99,7 +99,7 @@ module Danger
       if inline_mode
         # Report with inline comment
         send_inline_comment(warnings, 'warn')
-        send_inline_comment(errors, 'fail')
+        send_inline_comment(errors, fail_on_error ? 'fail' : 'warn')
         warn other_issues_message(other_issues_count) if other_issues_count > 0
       elsif warnings.count > 0 || errors.count > 0
         # Report if any warning or error
