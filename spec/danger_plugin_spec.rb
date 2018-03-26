@@ -300,7 +300,7 @@ module Danger
             .and_return(@swiftlint_response)
 
           @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: true, additional_swiftlint_args: '')
-          
+
           status = @swiftlint.status_report
           expect(status[:errors]).to_not be_empty
         end
@@ -311,7 +311,7 @@ module Danger
             .and_return(@swiftlint_response)
 
           @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
-          
+
           status = @swiftlint.status_report
           expect(status[:warnings]).to_not be_empty
           expect(status[:errors]).to be_empty
