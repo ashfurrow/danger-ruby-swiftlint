@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Added logging for excluded and included paths to improve debugging this functionality. 
 
 ## 0.15.0
 
