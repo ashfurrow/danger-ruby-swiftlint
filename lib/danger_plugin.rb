@@ -62,6 +62,8 @@ module Danger
       # Get config
       config = load_config(config_file_path)
 
+      log "Config succesfully loaded with excluded paths #{config['excluded'] || []}"
+
       # Extract excluded paths
       excluded_paths = format_paths(config['excluded'] || [], config_file_path)
 
@@ -167,7 +169,22 @@ module Danger
 
     # Get the configuration file
     def load_config(filepath)
-      filepath ? YAML.load_file(filepath) : {}
+      return {} unless !filepath.nil?
+      return {} unless File.exists?(filepath)
+
+      config_file = File.open(filepath).read
+
+      # Replace environment variables
+      config_file = parse_environment_variables(config_file)
+
+      YAML.load(config_file)
+    end
+
+    # Find all requested environment variables in the given string and replace them with the correct values.
+    def parse_environment_variables(file_contents)
+      file_contents.gsub(/\$\{([^{}]+)\}/) { | environment_variable |
+        environment_variable = ENV[$1] || ""
+      }
     end
 
     # Return whether the file exists within a specified collection of paths
