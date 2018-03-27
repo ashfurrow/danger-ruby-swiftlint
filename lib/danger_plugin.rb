@@ -65,8 +65,12 @@ module Danger
       # Extract excluded paths
       excluded_paths = format_paths(config['excluded'] || [], config_file_path)
 
+      log "Swiftlint will exclude the following paths: #{excluded_paths}"
+
       # Extract included paths
       included_paths = format_paths(config['included'] || [], config_file_path)
+
+      log "Swiftlint includes the following paths: #{included_paths}"
 
       # Extract swift files (ignoring excluded ones)
       files = find_swift_files(dir_selected, files, excluded_paths, included_paths)

@@ -2,6 +2,7 @@
 
 ## Current Master
 
+- Added logging for excluded and included paths to improve debugging this functionality. 
 - Removed unneeded extra files logging in while using verbose
 
 ## 0.15.0
