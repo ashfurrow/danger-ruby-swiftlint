@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Removed unneeded extra files logging in while using verbose
 
 ## 0.15.0
 

@@ -70,7 +70,6 @@ module Danger
 
       # Extract swift files (ignoring excluded ones)
       files = find_swift_files(dir_selected, files, excluded_paths, included_paths)
-      log files
       log "Swiftlint will lint the following files: #{files.join(', ')}"
 
       # Prepare swiftlint options
