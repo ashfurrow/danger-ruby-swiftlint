@@ -235,7 +235,9 @@ module Danger
                                                                          'spec/fixtures/SwiftFile.swift'
                                                                        ])
           expect(File).to receive(:file?).and_return(true)
-          expect(YAML).to receive(:load_file).and_return({})
+          expect(File).to receive(:exists?).and_return(true)
+          expect(File).to receive(:open).and_return(StringIO.new())
+          expect(YAML).to receive(:load).and_return({})
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(config: File.expand_path('.swiftlint.yml')), '')
