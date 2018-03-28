@@ -178,8 +178,10 @@ module Danger
 
     # Find all requested environment variables in the given string and replace them with the correct values.
     def parse_environment_variables(file_contents)
-      file_contents.gsub(/\$\{([^{}]+)\}/) do |environment_variable|
-        return environment_variable if ENV[Regexp.last_match[1]].nil?
+      # Matches the file contents for environment variables defined like ${VAR_NAME}.
+      # Replaces them with the environment variable value if it exists.
+      file_contents.gsub(/\$\{([^{}]+)\}/) do |env_var|
+        return env_var if ENV[Regexp.last_match[1]].nil?
         ENV[Regexp.last_match[1]]
       end
     end
