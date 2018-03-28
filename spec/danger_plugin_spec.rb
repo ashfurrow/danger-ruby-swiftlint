@@ -44,6 +44,10 @@ module Danger
           @swiftlint_response = '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 13 }]'
         end
 
+        after(:each) do
+          ENV['ENVIRONMENT_EXAMPLE'] = nil
+        end
+
         it 'accept files as arguments' do
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
@@ -336,8 +340,6 @@ module Danger
 
           @swiftlint.config_file = 'spec/fixtures/environment_variable_config.yml'
           @swiftlint.lint_files
-
-          ENV['ENVIRONMENT_EXAMPLE'] = nil
         end
       end
     end
