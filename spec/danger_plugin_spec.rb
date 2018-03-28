@@ -235,9 +235,9 @@ module Danger
                                                                          'spec/fixtures/SwiftFile.swift'
                                                                        ])
           expect(File).to receive(:file?).and_return(true)
-          expect(File).to receive(:exists?).and_return(true)
-          expect(File).to receive(:open).and_return(StringIO.new())
-          expect(YAML).to receive(:load).and_return({})
+          expect(File).to receive(:exist?).and_return(true)
+          expect(File).to receive(:open).and_return(StringIO.new)
+          expect(YAML).to receive(:safe_load).and_return({})
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(config: File.expand_path('.swiftlint.yml')), '')
@@ -320,8 +320,8 @@ module Danger
         end
 
         it 'parses environment variables set within the swiftlint config' do
-          ENV["ENVIRONMENT_EXAMPLE"] = "excluded_dir"
-          
+          ENV['ENVIRONMENT_EXAMPLE'] = 'excluded_dir'
+
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([
                                                                          'spec/fixtures/SwiftFile.swift',
@@ -337,7 +337,7 @@ module Danger
           @swiftlint.config_file = 'spec/fixtures/environment_variable_config.yml'
           @swiftlint.lint_files
 
-          ENV["ENVIRONMENT_EXAMPLE"] = nil
+          ENV['ENVIRONMENT_EXAMPLE'] = nil
         end
       end
     end

@@ -166,22 +166,22 @@ module Danger
 
     # Get the configuration file
     def load_config(filepath)
-      return {} unless !filepath.nil?
-      return {} unless File.exists?(filepath)
-
+      return {} if filepath.nil? || !File.exist?(filepath)
+      
       config_file = File.open(filepath).read
 
       # Replace environment variables
       config_file = parse_environment_variables(config_file)
 
-      YAML.load(config_file)
+      YAML.safe_load(config_file)
     end
 
     # Find all requested environment variables in the given string and replace them with the correct values.
     def parse_environment_variables(file_contents)
-      file_contents.gsub(/\$\{([^{}]+)\}/) { | environment_variable |
-        environment_variable = ENV[$1] || ""
-      }
+      file_contents.gsub(/\$\{([^{}]+)\}/) do |environment_variable|
+        return environment_variable if ENV[Regexp.last_match[1]].nil?
+        ENV[Regexp.last_match[1]]
+      end
     end
 
     # Return whether the file exists within a specified collection of paths
