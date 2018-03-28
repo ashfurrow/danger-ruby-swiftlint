@@ -62,8 +62,6 @@ module Danger
       # Get config
       config = load_config(config_file_path)
 
-      log "Config succesfully loaded with excluded paths #{config['excluded'] || []}"
-
       # Extract excluded paths
       excluded_paths = format_paths(config['excluded'] || [], config_file_path)
 
