@@ -44,6 +44,10 @@ module Danger
           @swiftlint_response = '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 13 }]'
         end
 
+        after(:each) do
+          ENV['ENVIRONMENT_EXAMPLE'] = nil
+        end
+
         it 'accept files as arguments' do
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
@@ -235,7 +239,9 @@ module Danger
                                                                          'spec/fixtures/SwiftFile.swift'
                                                                        ])
           expect(File).to receive(:file?).and_return(true)
-          expect(YAML).to receive(:load_file).and_return({})
+          expect(File).to receive(:exist?).and_return(true)
+          expect(File).to receive(:open).and_return(StringIO.new)
+          expect(YAML).to receive(:safe_load).and_return({})
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(config: File.expand_path('.swiftlint.yml')), '')
@@ -315,6 +321,25 @@ module Danger
           status = @swiftlint.status_report
           expect(status[:warnings]).to_not be_empty
           expect(status[:errors]).to be_empty
+        end
+
+        it 'parses environment variables set within the swiftlint config' do
+          ENV['ENVIRONMENT_EXAMPLE'] = 'excluded_dir'
+
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFile.swift',
+                                                                         'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift',
+                                                                         'spec/fixtures/excluded_dir/SwiftFile WithEscaped+CharactersThatShouldNotBeIncluded.swift'
+                                                                       ])
+
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .once
+            .and_return(@swiftlint_response)
+
+          @swiftlint.config_file = 'spec/fixtures/environment_variable_config.yml'
+          @swiftlint.lint_files
         end
       end
     end
