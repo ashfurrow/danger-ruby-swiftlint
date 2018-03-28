@@ -2,6 +2,7 @@
 
 ## Current Master
 
+- Add support for Environment variables which are supported in Swiftlint since [0.21.0](https://github.com/realm/SwiftLint/releases/tag/0.21.0) (See https://github.com/realm/SwiftLint/issues/1512). 
 - Added logging for excluded and included paths to improve debugging this functionality. 
 - Removed unneeded extra files logging in while using verbose
 
