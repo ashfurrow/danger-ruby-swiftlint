@@ -318,6 +318,27 @@ module Danger
           expect(status[:warnings]).to_not be_empty
           expect(status[:errors]).to be_empty
         end
+
+        it 'parses environment variables set within the swiftlint config' do
+          ENV["ENVIRONMENT_EXAMPLE"] = "excluded_dir"
+          
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFile.swift',
+                                                                         'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift',
+                                                                         'spec/fixtures/excluded_dir/SwiftFile WithEscaped+CharactersThatShouldNotBeIncluded.swift'
+                                                                       ])
+
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .once
+            .and_return(@swiftlint_response)
+
+          @swiftlint.config_file = 'spec/fixtures/environment_variable_config.yml'
+          @swiftlint.lint_files
+
+          ENV["ENVIRONMENT_EXAMPLE"] = nil
+        end
       end
     end
   end
