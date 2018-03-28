@@ -167,7 +167,7 @@ module Danger
     # Get the configuration file
     def load_config(filepath)
       return {} if filepath.nil? || !File.exist?(filepath)
-      
+
       config_file = File.open(filepath).read
 
       # Replace environment variables
