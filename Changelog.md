@@ -1,7 +1,9 @@
 # Changelog
 
 ## Current Master
-- Nothing yet!
+
+- Updates to SwiftLint 0.25.1.
+- Forces exclusion for files specified as excluded in `.swiftlint.yml`. (See [#87](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/87).)
 
 ## 0.16.0
 

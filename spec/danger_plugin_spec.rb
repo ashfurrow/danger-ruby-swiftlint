@@ -48,6 +48,18 @@ module Danger
           ENV['ENVIRONMENT_EXAMPLE'] = nil
         end
 
+        it 'specifies --force-exclude when invoking SwiftLint' do
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(force_exclude: ''), '')
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files('spec/fixtures/*.swift')
+
+          output = @swiftlint.status_report[:markdowns].first.to_s
+          expect(output).to include('SwiftLint found issues')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+        end
+
         it 'accept files as arguments' do
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')

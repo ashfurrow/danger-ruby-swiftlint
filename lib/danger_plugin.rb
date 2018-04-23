@@ -82,7 +82,8 @@ module Danger
         config: config_file_path ? Shellwords.escape(config_file_path) : nil,
         reporter: 'json',
         quiet: true,
-        pwd: dir_selected
+        pwd: dir_selected,
+        force_exclude: ''
       }
       log "linting with options: #{options}"
 
