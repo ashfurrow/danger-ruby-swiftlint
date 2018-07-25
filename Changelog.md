@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Add support for skipping installation of SwiftLint tool. (See [#106](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/106))
 
 ## 0.17.1
 
@@ -15,8 +15,8 @@
 
 ## 0.16.0
 
-- Add support for Environment variables which are supported in Swiftlint since [0.21.0](https://github.com/realm/SwiftLint/releases/tag/0.21.0) (See https://github.com/realm/SwiftLint/issues/1512). 
-- Added logging for excluded and included paths to improve debugging this functionality. 
+- Add support for Environment variables which are supported in Swiftlint since [0.21.0](https://github.com/realm/SwiftLint/releases/tag/0.21.0) (See https://github.com/realm/SwiftLint/issues/1512).
+- Added logging for excluded and included paths to improve debugging this functionality.
 - Removed unneeded extra files logging in while using verbose
 
 ## 0.15.0

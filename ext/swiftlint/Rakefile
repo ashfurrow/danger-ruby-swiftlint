@@ -5,6 +5,8 @@ require_relative '../../lib/version'
 namespace :swiftlint do
   desc 'Download and install swiftlint tool'
   task :install do
+    return if ENV['SKIP_SWIFTLINT_INSTALL'] == 'YES'
+
     REPO = 'https://github.com/realm/SwiftLint'
     VERSION = ENV['SWIFTLINT_VERSION'] || DangerSwiftlint::SWIFTLINT_VERSION
     ASSET = 'portable_swiftlint.zip'
