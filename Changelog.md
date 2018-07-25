@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.17.2
+
 - Add support for skipping installation of SwiftLint tool. (See [#106](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/106))
 
 ## 0.17.1
