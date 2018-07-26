@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.17.3
+
 - Fix use of `return` in native extension `Rakefile`. See [#106](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/106).
 - Add `DANGER_` prefix to `DANGER_SKIP_SWIFTLINT_INSTALL`. See [#106](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/106).
 
