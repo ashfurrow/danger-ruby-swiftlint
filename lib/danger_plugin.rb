@@ -32,6 +32,12 @@ module Danger
     # Maximum number of issues to be reported.
     attr_accessor :max_num_violations
 
+    # Fail instead of warn on warnings
+    attr_accessor :fail_on_warning
+
+    # Fail instead of warn on errors
+    attr_accessor :fail_on_error
+
     # Provides additional logging diagnostic information.
     attr_accessor :verbose
 
@@ -45,7 +51,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files = nil, inline_mode: false, fail_on_error: false, fail_on_warning: false, additional_swiftlint_args: '')
+    def lint_files(files = nil, inline_mode: false, additional_swiftlint_args: '')
       # Fails if swiftlint isn't installed
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
@@ -58,6 +64,9 @@ module Danger
 
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
       log "Swiftlint will be run from #{dir_selected}"
+
+      @fail_on_warning ||= false
+      @fail_on_error ||= false
 
       # Get config
       config = load_config(config_file_path)
@@ -102,8 +111,8 @@ module Danger
 
       if inline_mode
         # Report with inline comment
-        send_inline_comment(warnings, fail_on_warning ? :fail : :warn)
-        send_inline_comment(errors, fail_on_error ? :fail : :warn)
+        send_inline_comment(warnings, @fail_on_warning ? :fail : :warn)
+        send_inline_comment(errors, @fail_on_error ? :fail : :warn)
         warn other_issues_message(other_issues_count) if other_issues_count > 0
       elsif warnings.count > 0 || errors.count > 0
         # Report if any warning or error
@@ -112,17 +121,17 @@ module Danger
         message << markdown_issues(errors, 'Errors') unless errors.empty?
         message << "\n#{other_issues_message(other_issues_count)}" if other_issues_count > 0
         markdown message
-        
+
         # Fail Danger on errors
-        if fail_on_error && errors.count > 0
+        if @fail_on_error && errors.count > 0
           fail 'Failed due to SwiftLint errors'
         end
         
         # Fail Danger on warnings
-        if fail_on_warning && warnings.count > 0
+        if @fail_on_warning && warnings.count > 0
           fail 'Failed due to SwiftLint warnings'
         end
-        
+
       end
     end
 
