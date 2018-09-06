@@ -38,6 +38,9 @@ module Danger
     # Fail instead of warn on errors
     attr_accessor :fail_on_error
 
+    # show warnings inline
+    attr_accessor :inline_mode
+
     # Provides additional logging diagnostic information.
     attr_accessor :verbose
 
@@ -51,7 +54,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files = nil, inline_mode: false, additional_swiftlint_args: '')
+    def lint_files(files = nil, additional_swiftlint_args: '')
       # Fails if swiftlint isn't installed
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
@@ -67,6 +70,7 @@ module Danger
 
       @fail_on_warning ||= false
       @fail_on_error ||= false
+      @inline_mode ||= false
 
       # Get config
       config = load_config(config_file_path)
