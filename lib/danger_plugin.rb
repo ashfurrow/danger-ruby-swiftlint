@@ -32,6 +32,15 @@ module Danger
     # Maximum number of issues to be reported.
     attr_accessor :max_num_violations
 
+    # Fail instead of warn on warnings
+    attr_accessor :fail_on_warning
+
+    # Fail instead of warn on errors
+    attr_accessor :fail_on_error
+
+    # show warnings inline
+    attr_accessor :inline_mode
+
     # Provides additional logging diagnostic information.
     attr_accessor :verbose
 
@@ -45,7 +54,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files = nil, inline_mode: false, fail_on_error: false, additional_swiftlint_args: '')
+    def lint_files(files = nil, additional_swiftlint_args: '')
       # Fails if swiftlint isn't installed
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
@@ -58,6 +67,10 @@ module Danger
 
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
       log "Swiftlint will be run from #{dir_selected}"
+
+      @fail_on_warning ||= false
+      @fail_on_error ||= false
+      @inline_mode ||= false
 
       # Get config
       config = load_config(config_file_path)
@@ -100,12 +113,13 @@ module Danger
       warnings = issues.select { |issue| issue['severity'] == 'Warning' }
       errors = issues.select { |issue| issue['severity'] == 'Error' }
 
-      if inline_mode
+      if @inline_mode
         # Report with inline comment
-        send_inline_comment(warnings, :warn)
-        send_inline_comment(errors, fail_on_error ? :fail : :warn)
-        warn other_issues_message(other_issues_count) if other_issues_count > 0
-      elsif warnings.count > 0 || errors.count > 0
+        send_inline_comment(warnings, @fail_on_warning ? :fail : :warn)
+        send_inline_comment(errors, @fail_on_error ? :fail : :warn)
+      end
+
+      if warnings.count > 0 || errors.count > 0
         # Report if any warning or error
         message = +"### SwiftLint found issues\n\n"
         message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
@@ -114,9 +128,15 @@ module Danger
         markdown message
 
         # Fail Danger on errors
-        if fail_on_error && errors.count > 0
+        if @fail_on_error && errors.count > 0
           fail 'Failed due to SwiftLint errors'
         end
+        
+        # Fail Danger on warnings
+        if @fail_on_warning && warnings.count > 0
+          fail 'Failed due to SwiftLint warnings'
+        end
+
       end
     end
 
@@ -242,7 +262,7 @@ module Danger
 
     def other_issues_message(issues_count)
       violations = issues_count == 1 ? 'violation' : 'violations'
-      "SwiftLint also found #{issues_count} more #{violations} with this PR."
+      "SwiftLint found #{issues_count} more #{violations} with this PR."
     end
 
     # Make SwiftLint object for binary_path
