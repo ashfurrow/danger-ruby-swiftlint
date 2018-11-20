@@ -4,6 +4,9 @@
 
 - Nothing yet!
 
+## 0.17.5
+- Updates to SwiftLint [0.28.1](https://github.com/realm/SwiftLint/releases/tag/0.28.1).
+
 ## 0.17.4
 - Updates to SwiftLint [0.27.0](https://github.com/realm/SwiftLint/releases/tag/0.27.0). 
 
