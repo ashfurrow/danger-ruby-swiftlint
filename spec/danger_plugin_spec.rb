@@ -353,6 +353,22 @@ module Danger
           @swiftlint.config_file = 'spec/fixtures/environment_variable_config.yml'
           @swiftlint.lint_files
         end
+
+        it 'runs SwiftLint only once if lint_all_files is set' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFile.swift',
+                                                                         'spec/fixtures/SwiftFile2.swift'
+                                                                       ])
+
+          expect_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(config: nil), '')
+            .once
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_all_files = true
+          @swiftlint.lint_files
+        end
       end
     end
   end

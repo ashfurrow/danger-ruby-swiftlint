@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Add `lint_all_files` option. This will lint all existing files (instead of just the added/modified ones). However, nested configurations works when this option is enabled.
 
 ## 0.17.5
 - Updates to SwiftLint [0.28.1](https://github.com/realm/SwiftLint/releases/tag/0.28.1).

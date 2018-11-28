@@ -35,6 +35,9 @@ module Danger
     # Provides additional logging diagnostic information.
     attr_accessor :verbose
 
+    # Whether all files should be linted in one pass
+    attr_accessor :lint_all_files
+
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of
     # .markdown and .md files.
@@ -88,7 +91,7 @@ module Danger
       log "linting with options: #{options}"
 
       # Lint each file and collect the results
-      issues = run_swiftlint(files, options, additional_swiftlint_args)
+      issues = run_swiftlint(files, lint_all_files, options, additional_swiftlint_args)
       other_issues_count = 0
       unless @max_num_violations.nil?
         other_issues_count = issues.count - @max_num_violations if issues.count > @max_num_violations
@@ -123,13 +126,22 @@ module Danger
     # Run swiftlint on each file and aggregate collect the issues
     #
     # @return [Array] swiftlint issues
-    def run_swiftlint(files, options, additional_swiftlint_args)
-      files
-        .map { |file| options.merge(path: file) }
-        .map { |full_options| swiftlint.lint(full_options, additional_swiftlint_args) }
-        .reject { |s| s == '' }
-        .map { |s| JSON.parse(s).flatten }
-        .flatten
+    def run_swiftlint(files, lint_all_files, options, additional_swiftlint_args)
+      if lint_all_files
+        result = swiftlint.lint(options, additional_swiftlint_args)
+        if result == ''
+          {}
+        else
+          JSON.parse(result).flatten
+        end
+      else
+        files
+          .map { |file| options.merge(path: file) }
+          .map { |full_options| swiftlint.lint(full_options, additional_swiftlint_args) }
+          .reject { |s| s == '' }
+          .map { |s| JSON.parse(s).flatten }
+          .flatten
+      end
     end
 
     # Find swift files from the files glob
