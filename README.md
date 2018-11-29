@@ -55,6 +55,17 @@ If you need to specify options for `swiftlint` that can _only_ be specified by c
 swiftlint.lint_files additional_swiftlint_args: '--lenient'
 ```
 
+By default, only files that were added or modified are linted.
+
+It's not possible to use [nested configurations](https://github.com/realm/SwiftLint#nested-configurations) in that case, because Danger SwiftLint lints each file on it's own, and by doing that the nested configuration is disabled. If you want to learn more details about this, read the whole issue [here](https://github.com/ashfurrow/danger-swiftlint/issues/4).
+
+However, you can use the `lint_all_files` option to lint all the files. In that case, Danger SwiftLint doesn't lint files individually, which makes nested configuration to work. It'd be the same as you were running `swiftlint` on the root folder:
+
+```ruby
+swiftlint.lint_all_files = true
+swiftlint.lint_files
+```
+
 You can use the `SWIFTLINT_VERSION` environment variable to override the default version installed via the `rake install` task.
 
 Finally, if something's not working correctly, you can debug this plugin by using setting `swiftlint.verbose = true`.
