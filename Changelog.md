@@ -2,6 +2,10 @@
 
 ## Current Master
 
+- Nothing yet!
+
+## 0.18.1
+
 - Fixes problem with unary plus operator. See [#119](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/119).
 
 ## 0.18.0
