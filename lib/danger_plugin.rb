@@ -110,7 +110,7 @@ module Danger
         warn other_issues_message(other_issues_count) if other_issues_count > 0
       elsif warnings.count > 0 || errors.count > 0
         # Report if any warning or error
-        message = "### SwiftLint found issues\n\n"
+        message = "### SwiftLint found issues\n\n".dup
         message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
         message << markdown_issues(errors, 'Errors') unless errors.empty?
         message << "\n#{other_issues_message(other_issues_count)}" if other_issues_count > 0
@@ -225,7 +225,7 @@ module Danger
     #
     # @return  [String]
     def markdown_issues(results, heading)
-      message = +"#### #{heading}\n\n"
+      message = "#### #{heading}\n\n".dup
 
       message << "File | Line | Reason |\n"
       message << "| --- | ----- | ----- |\n"
