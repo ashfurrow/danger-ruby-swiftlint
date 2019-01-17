@@ -86,7 +86,7 @@ module Danger
         reporter: 'json',
         quiet: true,
         pwd: dir_selected,
-        force_exclude: ''
+        force_exclude: true
       }
       log "linting with options: #{options}"
 
