@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Fixes incorrect specifying of the `--force-exclude` option, which leads to the ```No lintable files found at path``` error. See [#87](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/87) discussion.
 
 ## 0.18.1
 
