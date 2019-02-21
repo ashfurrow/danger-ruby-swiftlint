@@ -251,7 +251,7 @@ module Danger
         message = "#{r['reason']}"
 
         # extended content here
-        filename = File.basename(r['file'])
+        filename = r['file'].split('/').last
         message << "\n"
         message << "#{r['file']}:#{r['line']}" # file:line for copying into Xcode quick open
         message << " #{r['rule_id'] }" # rule identifier, helps writing exceptions // swiftlint:disable:this rule_id
