@@ -57,7 +57,7 @@ module Danger
 
           output = @swiftlint.status_report[:markdowns].first.to_s
           expect(output).to include('SwiftLint found issues')
-          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided. (force_cast)')
         end
 
         it 'accept files as arguments' do
@@ -69,7 +69,7 @@ module Danger
 
           output = @swiftlint.status_report[:markdowns].first.to_s
           expect(output).to include('SwiftLint found issues')
-          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided. (force_cast)')
         end
 
         it 'sets maxium number of violations' do
@@ -83,9 +83,9 @@ module Danger
 
           output = @swiftlint.status_report[:markdowns].first.to_s
           expect(output).to include('SwiftLint found issues')
-          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided. (force_cast)')
           expect(output).to include('SwiftLint also found 1 more violation with this PR.')
-          expect(output).to_not include('SwiftFile.swift | 14 | Force casts should be avoided.')
+          expect(output).to_not include('SwiftFile.swift | 14 | Force casts should be avoided. (force_cast)')
         end
 
         it 'accepts additional cli arguments' do
