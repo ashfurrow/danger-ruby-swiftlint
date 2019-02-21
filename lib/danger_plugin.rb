@@ -247,8 +247,15 @@ module Danger
     def send_inline_comment(results, method)
       dir = "#{Dir.pwd}/"
       results.each do |r|
-        filename = r['file'].gsub(dir, '')
-        send(method, r['reason'], file: filename, line: r['line'])
+        github_filename = r['file'].gsub(dir, '')
+        message = "#{r['reason']}"
+
+        # extended content here
+        filename = File.basename(r['file'])
+        message << "\n"
+        message << "#{r['file']}:#{r['line']}" # file:line for copying into Xcode quick open
+        message << " #{r['rule_id'] }" # rule identifier, helps writing exceptions // swiftlint:disable:this rule_id
+        send(method, message, file: github_filename, line: r['line'])
       end
     end
 
