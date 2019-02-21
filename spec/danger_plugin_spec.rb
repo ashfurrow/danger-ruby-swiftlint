@@ -312,6 +312,17 @@ module Danger
           expect(status[:markdowns]).to be_empty
         end
 
+        it 'renders rule_id and file:line indicators in inline mode' do
+          allow_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, additional_swiftlint_args: '')
+
+          status = @swiftlint.status_report          
+          expect(status[:warnings]).to eql(["Force casts should be avoided.\n`force_cast` `SwiftFile.swift:13`"])
+        end
+
         it 'generate errors in inline_mode when fail_on_error' do
           allow_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
