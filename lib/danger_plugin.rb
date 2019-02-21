@@ -255,8 +255,9 @@ module Danger
         # extended content here
         filename = r['file'].split('/').last
         message << "\n"
-        message << "#{filename}:#{r['line']}" # file:line for copying into Xcode quick open
-        message << " #{r['rule_id'] }" # rule identifier, helps writing exceptions // swiftlint:disable:this rule_id
+        message << "`#{r['rule_id']}`" # helps writing exceptions // swiftlint:disable:this rule_id
+        message << " `#{filename}:#{r['line']}`" # file:line for pasting into Xcode Quick Open
+        
         send(method, message, file: github_filename, line: r['line'])
       end
     end
