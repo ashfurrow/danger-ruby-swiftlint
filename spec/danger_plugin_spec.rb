@@ -57,7 +57,7 @@ module Danger
 
           output = @swiftlint.status_report[:markdowns].first.to_s
           expect(output).to include('SwiftLint found issues')
-          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided. (force_cast)')
         end
 
         it 'accept files as arguments' do
@@ -69,7 +69,7 @@ module Danger
 
           output = @swiftlint.status_report[:markdowns].first.to_s
           expect(output).to include('SwiftLint found issues')
-          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided. (force_cast)')
         end
 
         it 'sets maxium number of violations' do
@@ -83,9 +83,9 @@ module Danger
 
           output = @swiftlint.status_report[:markdowns].first.to_s
           expect(output).to include('SwiftLint found issues')
-          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided.')
+          expect(output).to include('SwiftFile.swift | 13 | Force casts should be avoided. (force_cast)')
           expect(output).to include('SwiftLint also found 1 more violation with this PR.')
-          expect(output).to_not include('SwiftFile.swift | 14 | Force casts should be avoided.')
+          expect(output).to_not include('SwiftFile.swift | 14 | Force casts should be avoided. (force_cast)')
         end
 
         it 'accepts additional cli arguments' do
@@ -310,6 +310,17 @@ module Danger
           status = @swiftlint.status_report
           expect(status[:errors] + status[:warnings]).to_not be_empty
           expect(status[:markdowns]).to be_empty
+        end
+
+        it 'renders rule_id and file:line indicators in inline mode' do
+          allow_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+            .and_return(@swiftlint_response)
+
+          @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, additional_swiftlint_args: '')
+
+          status = @swiftlint.status_report          
+          expect(status[:warnings]).to eql(["Force casts should be avoided.\n`force_cast` `SwiftFile.swift:13`"])
         end
 
         it 'generate errors in inline_mode when fail_on_error' do

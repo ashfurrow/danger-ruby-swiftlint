@@ -234,8 +234,9 @@ module Danger
         filename = r['file'].split('/').last
         line = r['line']
         reason = r['reason']
-
-        message << "#{filename} | #{line} | #{reason} \n"
+        rule = r['rule_id']
+        # Other available properties can be found int SwiftLint/…/JSONReporter.swift
+        message << "#{filename} | #{line} | #{reason} (#{rule})\n"
       end
 
       message
@@ -247,8 +248,16 @@ module Danger
     def send_inline_comment(results, method)
       dir = "#{Dir.pwd}/"
       results.each do |r|
-        filename = r['file'].gsub(dir, '')
-        send(method, r['reason'], file: filename, line: r['line'])
+        github_filename = r['file'].gsub(dir, '')
+        message = "#{r['reason']}".dup
+
+        # extended content here
+        filename = r['file'].split('/').last
+        message << "\n"
+        message << "`#{r['rule_id']}`" # helps writing exceptions // swiftlint:disable:this rule_id
+        message << " `#{filename}:#{r['line']}`" # file:line for pasting into Xcode Quick Open
+        
+        send(method, message, file: github_filename, line: r['line'])
       end
     end
 
