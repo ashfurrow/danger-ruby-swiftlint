@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.19.0
+
+- Adds the rule ID and filename:line to GitHub comments. See [#122](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/122).
+
 ## 0.18.2
 
 - Fixes incorrect specifying of the `--force-exclude` option, which leads to the ```No lintable files found at path``` error. See [#87](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/87) discussion.
