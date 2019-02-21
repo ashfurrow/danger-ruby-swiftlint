@@ -248,12 +248,12 @@ module Danger
       dir = "#{Dir.pwd}/"
       results.each do |r|
         github_filename = r['file'].gsub(dir, '')
-        message = "#{r['reason']}"
+        message = "#{r['reason']}".dup
 
         # extended content here
         filename = r['file'].split('/').last
         message << "\n"
-        message << "#{r['file']}:#{r['line']}" # file:line for copying into Xcode quick open
+        message << "#{filename}:#{r['line']}" # file:line for copying into Xcode quick open
         message << " #{r['rule_id'] }" # rule identifier, helps writing exceptions // swiftlint:disable:this rule_id
         send(method, message, file: github_filename, line: r['line'])
       end
