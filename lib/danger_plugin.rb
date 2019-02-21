@@ -237,7 +237,6 @@ module Danger
         rule = r['rule_id']
         # Other available properties can be found int SwiftLint/…/JSONReporter.swift
         message << "#{filename} | #{line} | #{reason} (#{rule})\n"
-        message << "#{filename} | #{line}"
       end
 
       message
