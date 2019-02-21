@@ -234,8 +234,10 @@ module Danger
         filename = r['file'].split('/').last
         line = r['line']
         reason = r['reason']
-
-        message << "#{filename} | #{line} | #{reason} \n"
+        rule = r['rule_id']
+        # Other available properties can be found int SwiftLint/…/JSONReporter.swift
+        message << "#{filename} | #{line} | #{reason} (#{rule})\n"
+        message << "#{filename} | #{line}"
       end
 
       message
