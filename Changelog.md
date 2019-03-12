@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.19.1
+
+- Updates to SwiftLint [0.31.0](https://github.com/realm/SwiftLint/releases/tag/0.31.0). 
+
 ## 0.19.0
 
 - Adds the rule ID and filename:line to GitHub comments. See [#122](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/122).
