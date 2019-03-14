@@ -15,9 +15,9 @@ namespace :swiftlint do
 
     puts "Downloading swiftlint@#{VERSION}"
     sh [
-      "mkdir -p #{DESTINATION}",
+      "mkdir -p '#{DESTINATION}'",
       "curl -s -L #{URL} -o #{ASSET}",
-      "unzip -q #{ASSET} -d #{DESTINATION}",
+      "unzip -q #{ASSET} -d '#{DESTINATION}'",
       "rm #{ASSET}"
     ].join(' && ')
   end
