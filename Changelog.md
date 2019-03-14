@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.19.2
+
+- Fix gem installation when installation path contains spaces. See [#126](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/126).
+
 ## 0.19.1
 
 - Updates to SwiftLint [0.31.0](https://github.com/realm/SwiftLint/releases/tag/0.31.0). 
