@@ -42,6 +42,8 @@ module Danger
           allow(@swiftlint.git).to receive(:modified_files).and_return([])
 
           @swiftlint_response = '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 13 }]'
+          @swiftlint_multiviolation_response = '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 13 },
+                                                 { "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 10, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 16 }]'
         end
 
         after(:each) do
@@ -379,6 +381,28 @@ module Danger
 
           @swiftlint.lint_all_files = true
           @swiftlint.lint_files
+        end
+        
+        it 'filters violations based on select block' do
+          allow_any_instance_of(Swiftlint).to receive(:lint)
+            .with(hash_including(pwd: File.expand_path('.')), '')
+            .and_return(@swiftlint_multiviolation_response)
+
+          @swiftlint.lint_files(['spec/fixtures/some\ dir/SwiftFile.swift'], inline_mode: true) { |violation| 
+            violation["line"] != 16
+          }
+          status = @swiftlint.status_report
+          expect(status[:warnings]).to eql(["Force casts should be avoided.\n`force_cast` `SwiftFile.swift:13`"])
+        end
+        
+        it 'filters nothing out if not passed a select block' do
+            allow_any_instance_of(Swiftlint).to receive(:lint)
+              .with(hash_including(pwd: File.expand_path('.')), '')
+              .and_return(@swiftlint_multiviolation_response)
+  
+            @swiftlint.lint_files(['spec/fixtures/some\ dir/SwiftFile.swift'], inline_mode: true)
+            status = @swiftlint.status_report
+            expect(status[:warnings].length).to eql(2)
         end
       end
     end

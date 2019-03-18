@@ -48,7 +48,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files = nil, inline_mode: false, fail_on_error: false, additional_swiftlint_args: '')
+    def lint_files(files = nil, inline_mode: false, fail_on_error: false, additional_swiftlint_args: '', &select_block)
       # Fails if swiftlint isn't installed
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
@@ -98,6 +98,11 @@ module Danger
         issues = issues.take(@max_num_violations)
       end
       log "Received from Swiftlint: #{issues}"
+      
+      # filter out any unwanted violations with the passed in select_block
+      if select_block
+        issues.select! { |issue| select_block.call(issue) }
+      end
 
       # Filter warnings and errors
       warnings = issues.select { |issue| issue['severity'] == 'Warning' }
