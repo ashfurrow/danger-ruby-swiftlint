@@ -64,6 +64,20 @@ swiftlint.lint_all_files = true
 swiftlint.lint_files
 ```
 
+It's also possible to pass a block to filter out any violations after swiftlint has been run. Here's an example filtering out all violations that didn't occur in the current github PR, using the third party gem `git_diff_parser`:
+
+```ruby
+require 'git_diff_parser'
+
+diff = GitDiffParser::Patches.parse(github.pr_diff)
+dir = "#{Dir.pwd}/"
+swiftlint.lint_files(inline_mode: true) { |violation|
+  diff_filename = violation['file'].gsub(dir, '')
+  file_patch = diff.find_patch_by_file(diff_filename)
+  file_patch != nil && file_patch.changed_lines.any? { |line| line.number == violation['line']}
+}
+```
+
 You can use the `SWIFTLINT_VERSION` environment variable to override the default version installed via the `rake install` task.
 
 Finally, if something's not working correctly, you can debug this plugin by using setting `swiftlint.verbose = true`.
