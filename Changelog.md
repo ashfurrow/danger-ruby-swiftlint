@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.20.0
+
+- Adds ability to filter out violation reports with a block. See [#127](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/127).
+
 ## 0.19.2
 
 - Fix gem installation when installation path contains spaces. See [#126](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/126).
