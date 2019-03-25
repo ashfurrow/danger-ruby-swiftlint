@@ -38,6 +38,15 @@ module Danger
     # Whether all files should be linted in one pass
     attr_accessor :lint_all_files
 
+    # Whether we should fail on warnings
+    attr_accessor :strict
+
+    # Warnings found
+    attr_accessor :warnings
+
+    # Errors found
+    attr_accessor :errors
+
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of
     # .markdown and .md files.
@@ -105,13 +114,13 @@ module Danger
       end
 
       # Filter warnings and errors
-      warnings = issues.select { |issue| issue['severity'] == 'Warning' }
-      errors = issues.select { |issue| issue['severity'] == 'Error' }
+      @warnings = issues.select { |issue| issue['severity'] == 'Warning' }
+      @errors = issues.select { |issue| issue['severity'] == 'Error' }
 
       if inline_mode
         # Report with inline comment
-        send_inline_comment(warnings, :warn)
-        send_inline_comment(errors, fail_on_error ? :fail : :warn)
+        send_inline_comment(warnings, strict ? :fail : :warn)
+        send_inline_comment(errors, (fail_on_error || strict) ? :fail : :warn)
         warn other_issues_message(other_issues_count) if other_issues_count > 0
       elsif warnings.count > 0 || errors.count > 0
         # Report if any warning or error
@@ -121,8 +130,11 @@ module Danger
         message << "\n#{other_issues_message(other_issues_count)}" if other_issues_count > 0
         markdown message
 
-        # Fail Danger on errors
-        if fail_on_error && errors.count > 0
+        # Fail danger on errors
+        should_fail_by_errors = fail_on_error && errors.count > 0
+        # Fail danger if any warnings or errors and we are strict
+        should_fail_by_strict = strict && (errors.count > 0 || warnings.count > 0)
+        if should_fail_by_errors || should_fail_by_strict
           fail 'Failed due to SwiftLint errors'
         end
       end

@@ -348,6 +348,69 @@ module Danger
           expect(status[:errors]).to be_empty
         end
 
+        context '#strict' do
+          before(:each) do
+            allow_any_instance_of(Swiftlint).to receive(:lint)
+              .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+              .and_return(swiftlint_response)
+          end
+
+          context 'when not strict' do
+            # Response without any errors and a single warning
+            let(:swiftlint_response) { '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Warning", "type" : "Force Cast", "line" : 13 }]' }
+
+            it 'does not fail on warnings if inline' do
+              @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
+
+              expect(@swiftlint.failed?).to_not be true
+            end
+
+            it 'does not fail on warnings if not inline' do
+              @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: false, fail_on_error: false, additional_swiftlint_args: '')
+
+              expect(@swiftlint.failed?).to_not be true
+            end
+          end
+
+          context 'when strict is enabled' do
+            # Response without any errors and a single warning
+            let(:swiftlint_response) { '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec//fixtures/SwiftFile.swift", "severity" : "Warning", "type" : "Force Cast", "line" : 13 }]' }
+
+            before(:each) do
+              @swiftlint.strict = true
+            end
+
+            it 'fails on warnings if inline' do
+              @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
+
+              expect(@swiftlint.failed?).to be true
+            end
+
+            it 'fails on warnings if not inline' do
+              @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: false, fail_on_error: false, additional_swiftlint_args: '')
+
+              expect(@swiftlint.failed?).to be true
+            end
+
+            context 'with errors' do
+              # Response with an error
+              let(:swiftlint_response) { @swiftlint_response }
+
+              it 'fails if inline' do
+                @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
+
+                expect(@swiftlint.failed?).to be true
+              end
+
+              it 'fails if not inline' do
+                @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: false, fail_on_error: false, additional_swiftlint_args: '')
+
+                expect(@swiftlint.failed?).to be true
+              end
+            end
+          end
+        end
+
         it 'parses environment variables set within the swiftlint config' do
           ENV['ENVIRONMENT_EXAMPLE'] = 'excluded_dir'
 
