@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.20.1
+
+- Adds `strict` option. See[#128](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/128).
+
 ## 0.20.0
 
 - Adds ability to filter out violation reports with a block. See [#127](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/127).
