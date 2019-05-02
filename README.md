@@ -78,7 +78,7 @@ swiftlint.lint_files(inline_mode: true) { |violation|
 }
 ```
 
-Or, by passing the `no_comment` parameter, you can completely manage the commenting of issues, warnings and errors yourself. An example usage might be using github reviews, or custom filtering logic. Note: When this parameter is set to true all other parameters except `files` and `additional_swiftlint_args` are ignored.
+Or, by passing the `no_comment` parameter, you can completely manage the commenting of issues, warnings and errors yourself. An example usage might be using GitHub reviews, or custom filtering logic. **Note**: When this parameter is set to `true`, all other parameters except `files` and `additional_swiftlint_args` are ignored.
 
 ```ruby
 swiftlint.lint_files(no_comment: true)
