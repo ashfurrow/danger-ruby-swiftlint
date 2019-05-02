@@ -113,7 +113,7 @@ module Danger
       log "Received from Swiftlint: #{issues}"
       
       # filter out any unwanted violations with the passed in select_block
-      if select_block
+      if select_block && !no_comment
         issues = issues.select { |issue| select_block.call(issue) }
       end
 
