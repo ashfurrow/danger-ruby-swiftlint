@@ -78,6 +78,17 @@ swiftlint.lint_files(inline_mode: true) { |violation|
 }
 ```
 
+Or, by passing the `no_comment` parameter, you can completely manage the commenting of issues, warnings and errors yourself. An example usage might be using GitHub reviews, or custom filtering logic. **Note**: When this parameter is set to `true`, all other parameters except `files` and `additional_swiftlint_args` are ignored.
+
+```ruby
+swiftlint.lint_files(no_comment: true)
+
+# Now, you can handle the combined warnings + errors, or each separately commenting
+swiftlint.issues    # contains combined warnings + errors
+swiftlint.warnings  # just warnings
+swiftlint.errors    # just errors
+```
+
 You can use the `SWIFTLINT_VERSION` environment variable to override the default version installed via the `rake install` task.
 
 Finally, if something's not working correctly, you can debug this plugin by using setting `swiftlint.verbose = true`.

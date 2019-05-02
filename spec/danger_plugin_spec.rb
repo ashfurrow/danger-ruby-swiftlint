@@ -410,6 +410,58 @@ module Danger
             end
           end
         end
+          
+        context 'when no_comment is enabled' do
+          
+          it 'does not create comments' do
+            allow_any_instance_of(Swiftlint).to receive(:lint)
+              .with(hash_including(pwd: File.expand_path('.')), '')
+              .and_return(@swiftlint_multiviolation_response)
+
+            @swiftlint.lint_files(['spec/fixtures/some\ dir/SwiftFile.swift'], inline_mode: true, no_comment: true)
+            status = @swiftlint.status_report
+            expect(status[:warnings]).to eql([])
+            expect(status[:errors]).to eql([])
+            expect(status[:markdown]).to be_nil
+          end
+          
+          it 'does not filter with max_violations' do
+            allow_any_instance_of(Swiftlint).to receive(:lint)
+              .with(hash_including(pwd: File.expand_path('.')), '')
+              .and_return(@swiftlint_multiviolation_response)
+
+            @swiftlint.max_num_violations = 1
+            @swiftlint.lint_files(['spec/fixtures/some\ dir/SwiftFile.swift'], no_comment: true)
+            issues = @swiftlint.issues
+            expect(issues.length).to eql(2)
+          end
+          
+          it 'does not filter with select_block' do
+            allow_any_instance_of(Swiftlint).to receive(:lint)
+              .with(hash_including(pwd: File.expand_path('.')), '')
+              .and_return(@swiftlint_multiviolation_response)
+
+            @swiftlint.max_num_violations = 1
+            @swiftlint.lint_files(['spec/fixtures/some\ dir/SwiftFile.swift'], no_comment: true) { |v|
+              false
+            }
+            issues = @swiftlint.issues
+            expect(issues.length).to eql(2)
+          end
+          
+          it 'correctly sets issues, warnings, and errors accessors' do
+            allow_any_instance_of(Swiftlint).to receive(:lint)
+              .with(hash_including(pwd: File.expand_path('.')), '')
+              .and_return(@swiftlint_multiviolation_response)
+
+            @swiftlint.lint_files(['spec/fixtures/some\ dir/SwiftFile.swift'], no_comment: true)
+            issues = @swiftlint.issues
+            warnings = @swiftlint.warnings
+            errors = @swiftlint.errors
+            expect(issues.length).to eql(warnings.length + errors.length)
+          end
+        end
+        
 
         it 'parses environment variables set within the swiftlint config' do
           ENV['ENVIRONMENT_EXAMPLE'] = 'excluded_dir'

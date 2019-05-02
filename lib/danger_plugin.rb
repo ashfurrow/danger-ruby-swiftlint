@@ -46,6 +46,9 @@ module Danger
 
     # Errors found
     attr_accessor :errors
+    
+    # All issues found
+    attr_accessor :issues
 
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of
@@ -57,7 +60,7 @@ module Danger
     #          if nil, modified and added files from the diff will be used.
     # @return  [void]
     #
-    def lint_files(files = nil, inline_mode: false, fail_on_error: false, additional_swiftlint_args: '', &select_block)
+    def lint_files(files = nil, inline_mode: false, fail_on_error: false, additional_swiftlint_args: '', no_comment: false, &select_block)
       # Fails if swiftlint isn't installed
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
@@ -101,21 +104,25 @@ module Danger
 
       # Lint each file and collect the results
       issues = run_swiftlint(files, lint_all_files, options, additional_swiftlint_args)
+      @issues = issues
       other_issues_count = 0
-      unless @max_num_violations.nil?
+      unless @max_num_violations.nil? || no_comment
         other_issues_count = issues.count - @max_num_violations if issues.count > @max_num_violations
         issues = issues.take(@max_num_violations)
       end
       log "Received from Swiftlint: #{issues}"
       
       # filter out any unwanted violations with the passed in select_block
-      if select_block
-        issues.select! { |issue| select_block.call(issue) }
+      if select_block && !no_comment
+        issues = issues.select { |issue| select_block.call(issue) }
       end
 
       # Filter warnings and errors
       @warnings = issues.select { |issue| issue['severity'] == 'Warning' }
       @errors = issues.select { |issue| issue['severity'] == 'Error' }
+      
+      # Early exit so we don't comment
+      return if no_comment
 
       if inline_mode
         # Report with inline comment
