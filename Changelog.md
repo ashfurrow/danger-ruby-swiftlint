@@ -4,9 +4,13 @@
 
 - Nothing yet!
 
+## 0.21.0
+
+- Adds `no_comment` option. See [#130](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/130). 
+
 ## 0.20.1
 
-- Adds `strict` option. See[#128](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/128).
+- Adds `strict` option. See [#128](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/128).
 
 ## 0.20.0
 
