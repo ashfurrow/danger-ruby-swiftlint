@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.21.1
+
+- Performance improvements when `lint_all_files` is `true`. See [#131](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/131).
+
 ## 0.21.0
 
 - Adds `no_comment` option. See [#130](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/130). 
