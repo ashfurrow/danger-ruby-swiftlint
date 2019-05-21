@@ -87,10 +87,6 @@ module Danger
 
       log "Swiftlint includes the following paths: #{included_paths}"
 
-      # Extract swift files (ignoring excluded ones)
-      files = find_swift_files(dir_selected, files, excluded_paths, included_paths)
-      log "Swiftlint will lint the following files: #{files.join(', ')}"
-
       # Prepare swiftlint options
       options = {
         # Make sure we don't fail when config path has spaces
@@ -102,8 +98,17 @@ module Danger
       }
       log "linting with options: #{options}"
 
-      # Lint each file and collect the results
-      issues = run_swiftlint(files, lint_all_files, options, additional_swiftlint_args)
+      if lint_all_files
+        issues = run_swiftlint(options, additional_swiftlint_args)
+      else
+        # Extract swift files (ignoring excluded ones)
+        files = find_swift_files(dir_selected, files, excluded_paths, included_paths)
+        log "Swiftlint will lint the following files: #{files.join(', ')}"
+
+        # Lint each file and collect the results
+        issues = run_swiftlint_for_each(files, options, additional_swiftlint_args)
+      end
+
       @issues = issues
       other_issues_count = 0
       unless @max_num_violations.nil? || no_comment
@@ -147,25 +152,28 @@ module Danger
       end
     end
 
+    # Run swiftlint on all files and returns the issues
+    #
+    # @return [Array] swiftlint issues
+    def run_swiftlint(options, additional_swiftlint_args)
+      result = swiftlint.lint(options, additional_swiftlint_args)
+      if result == ''
+        {}
+      else
+        JSON.parse(result).flatten
+      end
+    end
+
     # Run swiftlint on each file and aggregate collect the issues
     #
     # @return [Array] swiftlint issues
-    def run_swiftlint(files, lint_all_files, options, additional_swiftlint_args)
-      if lint_all_files
-        result = swiftlint.lint(options, additional_swiftlint_args)
-        if result == ''
-          {}
-        else
-          JSON.parse(result).flatten
-        end
-      else
-        files
-          .map { |file| options.merge(path: file) }
-          .map { |full_options| swiftlint.lint(full_options, additional_swiftlint_args) }
-          .reject { |s| s == '' }
-          .map { |s| JSON.parse(s).flatten }
-          .flatten
-      end
+    def run_swiftlint_for_each(files, options, additional_swiftlint_args)
+      files
+        .map { |file| options.merge(path: file) }
+        .map { |full_options| swiftlint.lint(full_options, additional_swiftlint_args) }
+        .reject { |s| s == '' }
+        .map { |s| JSON.parse(s).flatten }
+        .flatten
     end
 
     # Find swift files from the files glob
