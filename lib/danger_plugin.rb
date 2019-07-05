@@ -50,6 +50,9 @@ module Danger
     # All issues found
     attr_accessor :issues
 
+    # Whether all issues or ones in PR Diff to be reported
+    attr_accessor :filter_issues_in_diff
+
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of
     # .markdown and .md files.
@@ -107,6 +110,11 @@ module Danger
 
         # Lint each file and collect the results
         issues = run_swiftlint_for_each(files, options, additional_swiftlint_args)
+      end
+
+      if filter_issues_in_diff
+        # Filter issues related to changes in PR Diff
+        issues = filter_git_diff_issues(issues)
       end
 
       @issues = issues
@@ -307,6 +315,54 @@ module Danger
 
     def log(text)
       puts(text) if @verbose
+    end
+
+    # Filters issues reported against changes in the modified files
+    #
+    # @return [Array] swiftlint issues
+    def filter_git_diff_issues(issues)
+      modified_files_info = git_modified_files_info()
+      return issues.select { |i| 
+           modified_files_info["#{i['file']}"] != nil && modified_files_info["#{i['file']}"].include?(i['line'].to_i) 
+        }
+    end
+
+    # Finds modified files and added files, creates array of files with modified line numbers
+    #
+    # @return [Array] Git diff changes for each file
+    def git_modified_files_info()
+        modified_files_info = Hash.new
+        updated_files = (git.modified_files - git.deleted_files) + git.added_files
+        updated_files.each {|file|
+            modified_lines = git_modified_lines(file)
+            modified_files_info[File.expand_path(file)] = modified_lines
+        }
+        modified_files_info
+    end
+
+    # Gets git patch info and finds modified line numbers, excludes removed lines
+    #
+    # @return [Array] Modified line numbers i
+    def git_modified_lines(file)
+      git_range_info_line_regex = /^@@ .+\+(?<line_number>\d+),/ 
+      git_modified_line_regex = /^\+(?!\+|\+)/
+      git_removed_line_regex = /^[-]/
+      git_not_removed_line_regex = /^[^-]/
+      file_info = git.diff_for_file(file)
+      line_number = 0
+      lines = []
+      file_info.patch.split("\n").each do |line|
+          starting_line_number = 0
+          case line
+          when git_range_info_line_regex
+              starting_line_number = Regexp.last_match[:line_number].to_i
+          when git_modified_line_regex
+              lines << line_number
+          end
+          line_number += 1 if line_number > 0
+          line_number = starting_line_number if line_number == 0 && starting_line_number > 0
+      end
+      lines
     end
   end
 end

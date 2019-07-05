@@ -1,0 +1,38 @@
+diff --git a/spec/fixtures/SwiftFile.swift b/spec/fixtures/SwiftFile.swift
+index 0e18440..9dda539 100755
+--- a/spec/fixtures/SwiftFile.swift
++++ b/spec/fixtures/SwiftFile.swift
+@@ -10,10 +10,33 @@ module Danger
+        // Hello, World! Program
+        import Swift
+        var tempString: String? = "Hello, World!"
+        print(tempString!)
+
++        var shoppingList = ["catfish", "water", "tulips"]
++        shoppingList[1] = "bottle of water"
++        
++        var occupations = [
++           "Malcolm": "Captain",
++           "Kaylee": "Mechanic",
++        ]
++        occupations["Jayne"] = "Public Relations"
++        
++        shoppingList.append("blue paint")
++        print(shoppingList)
++        
++        let individualScores = [75, 43, 103, 87, 12]
++        var teamScore = 0
++        for score in individualScores {
++           if score > 50 {
++               teamScore += 3
++           } else {
++               teamScore += 1
++           }
++        }
++        print(teamScore)
++        
+         var total = 0
+         for i in 0..<4 {
+            total += i
+         }
+         print(total)
