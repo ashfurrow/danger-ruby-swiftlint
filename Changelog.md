@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.22.0
+
+- Adds support to filter issues found in git diff. See [#132](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/132).
+
 ## 0.21.1
 
 - Performance improvements when `lint_all_files` is `true`. See [#131](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/131).
