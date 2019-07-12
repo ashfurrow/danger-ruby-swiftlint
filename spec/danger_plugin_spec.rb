@@ -348,6 +348,63 @@ module Danger
           expect(status[:errors]).to be_empty
         end
 
+        it 'Get git modified file line numbers' do
+          git_diff = File.read("spec/fixtures/SwiftFile.diff")
+          allow(@swiftlint.git).to receive(:diff_for_file).and_return(git_diff)
+          allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
+          modified_lines = @swiftlint.git_modified_lines("spec/fixtures/SwiftFile.swift")
+          expect(modified_lines).to_not be_empty
+          expect(modified_lines.length).to eql(23)
+        end
+
+        it 'Get git modified files info' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFile.swift',
+                                                                         'spec/fixtures/DeletedFile.swift'
+                                                                       ])
+          allow(@swiftlint.git).to receive(:deleted_files).and_return([
+                                                                        'spec/fixtures/DeletedFile.swift'
+                                                                      ])
+          git_diff = File.read("spec/fixtures/SwiftFile.diff")
+          allow(@swiftlint.git).to receive(:diff_for_file).and_return(git_diff)
+          allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
+          modified_files_info = @swiftlint.git_modified_files_info
+          expect(modified_files_info).to_not be_empty
+          expect(modified_files_info.length).to eql(1)
+        end
+
+        it 'filters lint issues to return issues in modified files based on git diff patch info' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFile.swift',
+                                                                         'spec/fixtures/DeletedFile.swift'
+                                                                       ])
+          allow(@swiftlint.git).to receive(:deleted_files).and_return([
+                                                                        'spec/fixtures/DeletedFile.swift'
+                                                                      ])
+          git_diff = File.read("spec/fixtures/SwiftFile.diff")
+          allow(@swiftlint.git).to receive(:diff_for_file).and_return(git_diff)
+          allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
+
+          swiftlint_violations_response = '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec/fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 14 },
+                                                 { "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 10, "file" : "/Users/me/this_repo/spec/fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 16 }]'
+          
+          violations_json = JSON.parse(swiftlint_violations_response)
+          violations_json[0][:file] = File.expand_path('spec/fixtures/SwiftFile.swift')
+          violations_json[1][:file] = File.expand_path('spec/fixtures/SwiftFile.swift')
+          swiftlint_violations_response= violations_json.to_json
+          allow_any_instance_of(Swiftlint).to receive(:lint)
+          .with(hash_including(path: File.expand_path('spec/fixtures/SwiftFile.swift')), '')
+          .and_return(swiftlint_violations_response)
+          
+          @swiftlint.filter_issues_in_diff = true
+          @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
+
+          status = @swiftlint.status_report
+          expect(status[:warnings]).to eql(["Force casts should be avoided.\n`force_cast` `SwiftFile.swift:16`"])
+        end
+
         context '#strict' do
           before(:each) do
             allow_any_instance_of(Swiftlint).to receive(:lint)
