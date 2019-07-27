@@ -20,4 +20,7 @@ guard :rspec, cmd: 'bundle exec rspec' do
   # Ruby files
   ruby = dsl.ruby
   dsl.watch_spec_files_for(ruby.lib_files)
+
+  # Watch ext/swiftlint/*.rb files
+  dsl.watch_spec_files_for(%r{^ext/swiftlint/(.+)\.rb$})
 end
