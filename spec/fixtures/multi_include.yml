@@ -1,0 +1,6 @@
+disabled_rules:
+  - todo
+
+included:
+  - SwiftFile.swift
+  - some_dir/SwiftFile.swift

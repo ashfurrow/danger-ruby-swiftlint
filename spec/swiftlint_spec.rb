@@ -40,4 +40,19 @@ describe Swiftlint do
                   cache_path: '/path',
                   enable_all_rules: true)
   end
+
+  it 'runs accepting options with env' do
+    cmd = 'swiftlint lint --no-use-stdin'
+    expect(swiftlint).to receive(:`).with(including(cmd))
+    expect(swiftlint).to receive(:update_env).with(
+      { 'SCRIPT_INPUT_FILE_COUNT' => '1',
+        'SCRIPT_INPUT_FILE_0' => 'File.swift' })
+    expect(swiftlint).to receive(:restore_env)
+
+    swiftlint.run('lint',
+                  '',
+                  { use_stdin: false },
+                  { 'SCRIPT_INPUT_FILE_COUNT' => '1',
+                    'SCRIPT_INPUT_FILE_0' => 'File.swift' })
+  end
 end

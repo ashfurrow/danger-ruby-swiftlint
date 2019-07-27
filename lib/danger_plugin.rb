@@ -176,12 +176,32 @@ module Danger
     #
     # @return [Array] swiftlint issues
     def run_swiftlint_for_each(files, options, additional_swiftlint_args)
+      # Use `--use-script-input-files` flag along with `SCRIPT_INPUT_FILE_#` ENV
+      # variables to pass the list of files we want swiftlint to lint
+      options.merge!(use_script_input_files: true)
+
+      # Set environment variables:
+      #   * SCRIPT_INPUT_FILE_COUNT equal to number of files
+      #   * a variable in the form of SCRIPT_INPUT_FILE_# for each file
+      env = script_input(files)
+
+      result = swiftlint.lint(options, additional_swiftlint_args, env)
+      if result == ''
+        {}
+      else
+        JSON.parse(result).flatten
+      end
+    end
+
+    # Converts an array of files into `SCRIPT_INPUT_FILE_#` format
+    # for use with `--use-script-input-files`
+    # @return [Hash] mapping from `SCRIPT_INPUT_FILE_#` to file
+    #         SCRIPT_INPUT_FILE_COUNT will be set to the number of files
+    def script_input(files)
       files
-        .map { |file| options.merge(path: file) }
-        .map { |full_options| swiftlint.lint(full_options, additional_swiftlint_args) }
-        .reject { |s| s == '' }
-        .map { |s| JSON.parse(s).flatten }
-        .flatten
+        .map.with_index { |file, i| ["SCRIPT_INPUT_FILE_#{i}", file.to_s] }
+        .push(['SCRIPT_INPUT_FILE_COUNT', files.size.to_s])
+        .to_h
     end
 
     # Find swift files from the files glob
@@ -189,9 +209,6 @@ module Danger
     #
     # @return [Array] swift files
     def find_swift_files(dir_selected, files = nil, excluded_paths = [], included_paths = [])
-      # Needs to be escaped before comparsion with escaped file paths
-      dir_selected = Shellwords.escape(dir_selected)
-
       # Assign files to lint
       files = if files.nil?
                 (git.modified_files - git.deleted_files) + git.added_files
@@ -202,8 +219,8 @@ module Danger
       files.
         # Ensure only swift files are selected
         select { |file| file.end_with?('.swift') }.
-        # Make sure we don't fail when paths have spaces
-        map { |file| Shellwords.escape(File.expand_path(file)) }.
+        # Convert to absolute paths
+        map { |file| File.expand_path(file) }.
         # Remove dups
         uniq.
         # Ensure only files in the selected directory
@@ -245,7 +262,6 @@ module Danger
     def file_exists?(paths, file)
       paths.any? do |path|
         Find.find(path)
-            .map { |path_file| Shellwords.escape(path_file) }
             .include?(file)
       end
     end
