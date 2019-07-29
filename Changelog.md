@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.23.0
+
+- Migrates from individual SwiftLint invocations to using the `--use-script-input-files` option. See [#135](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/135).
+
 ## 0.22.0
 
 - Adds support to filter issues found in git diff. See [#132](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/132).
