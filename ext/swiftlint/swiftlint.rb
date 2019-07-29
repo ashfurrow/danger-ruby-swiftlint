@@ -7,17 +7,24 @@ class Swiftlint
   end
 
   # Runs swiftlint
-  def run(cmd = 'lint', additional_swiftlint_args = '', options = {})
+  def run(cmd = 'lint', additional_swiftlint_args = '', options = {}, env = nil)
     # change pwd before run swiftlint
     Dir.chdir options.delete(:pwd) if options.key? :pwd
 
-    # run swiftlint with provided options
-    `#{swiftlint_path} #{cmd} #{swiftlint_arguments(options, additional_swiftlint_args)}`
+    # Add `env` to environment
+    update_env(env)
+    begin
+      # run swiftlint with provided options
+      `#{swiftlint_path} #{cmd} #{swiftlint_arguments(options, additional_swiftlint_args)}`
+    ensure
+      # Remove any ENV variables we might have added
+      restore_env()
+    end
   end
 
   # Shortcut for running the lint command
-  def lint(options, additional_swiftlint_args)
-    run('lint', additional_swiftlint_args, options)
+  def lint(options, additional_swiftlint_args, env = nil)
+    run('lint', additional_swiftlint_args, options, env)
   end
 
   # Return true if swiftlint is installed or false otherwise
@@ -57,5 +64,26 @@ class Swiftlint
   # Path where swiftlint should be found
   def default_swiftlint_path
     File.expand_path(File.join(File.dirname(__FILE__), 'bin', 'swiftlint'))
+  end
+
+  # Adds `env` to shell environment as variables
+  # @param env (Hash) hash containing environment variables to add
+  def update_env(env)
+    return if !env || env.empty?
+    # Keep the same @original_env if we've already set it, since that would mean
+    # that we're adding more variables, in which case, we want to make sure to
+    # keep the true original when we go to restore it.
+    @original_env = ENV.to_h if @original_env.nil?
+    # Add `env` to environment
+    ENV.update(env)
+  end
+
+  # Restores shell environment to values in `@original_env`
+  # All environment variables not in `@original_env` will be removed
+  def restore_env()
+    if !@original_env.nil?
+      ENV.replace(@original_env)
+      @original_env = nil
+    end
   end
 end
