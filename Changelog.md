@@ -2,6 +2,11 @@
 
 ## Current Master
 
+
+- Nothing yet!
+
+## 0.24.0
+
 - Update SwiftLint to 0.38.0
 
 ## 0.23.0
