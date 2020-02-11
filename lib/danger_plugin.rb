@@ -216,6 +216,8 @@ module Danger
                 Dir.glob(files)
               end
       # Filter files to lint
+      excluded_paths_list = Find.find(*excluded_paths).to_a
+      included_paths_list = Find.find(*included_paths).to_a
       files.
         # Ensure only swift files are selected
         select { |file| file.end_with?('.swift') }.
@@ -226,12 +228,12 @@ module Danger
         # Ensure only files in the selected directory
         select { |file| file.start_with?(dir_selected) }.
         # Reject files excluded on configuration
-        reject { |file| file_exists?(excluded_paths, file) }.
+        reject { |file| excluded_paths_list.include?(file) }.
         # Accept files included on configuration
         select do |file|
-        next true if included_paths.empty?
-        file_exists?(included_paths, file)
-      end
+          next true if included_paths.empty?
+          included_paths_list.include?(file)
+        end
     end
 
     # Get the configuration file
@@ -253,16 +255,6 @@ module Danger
       file_contents.gsub(/\$\{([^{}]+)\}/) do |env_var|
         return env_var if ENV[Regexp.last_match[1]].nil?
         ENV[Regexp.last_match[1]]
-      end
-    end
-
-    # Return whether the file exists within a specified collection of paths
-    #
-    # @return [Bool] file exists within specified collection of paths
-    def file_exists?(paths, file)
-      paths.any? do |path|
-        Find.find(path)
-            .include?(file)
       end
     end
 
