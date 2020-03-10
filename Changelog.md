@@ -4,6 +4,11 @@
 
 - Nothing yet!
 
+## 0.24.2
+
+- Updates to SwiftLint
+  [0.39.1](https://github.com/realm/SwiftLint/releases/tag/0.39.1).
+
 ## 0.24.1
 
 - Improves performance for large code bases. See
