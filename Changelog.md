@@ -2,7 +2,7 @@
 
 ## Current Master
 
-- Nothing yet!
+- Fix `filter_issues_in_diff` mode when diff contains removed lines above a violation. See [#147](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/147)
 
 ## 0.24.2
 

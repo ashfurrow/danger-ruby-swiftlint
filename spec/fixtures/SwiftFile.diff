@@ -35,4 +35,5 @@ index 0e18440..9dda539 100755
          for i in 0..<4 {
             total += i
          }
-         print(total)
+-        print(total)
++        print("Total:", total)
