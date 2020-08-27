@@ -4,6 +4,11 @@
 
 ## Nothing yet!
 
+## 0.24.4
+
+- Updates to SwiftLint
+  [0.40.1](https://github.com/realm/SwiftLint/releases/tag/0.40.1).
+
 ## 0.24.3
 
 - Fix `filter_issues_in_diff` mode when diff contains removed lines above a violation. See [#147](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/147)
