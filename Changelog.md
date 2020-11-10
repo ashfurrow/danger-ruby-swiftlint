@@ -4,6 +4,12 @@
 
 ## Nothing yet!
 
+## 0.24.5
+
+- Fixes incompatibility with SwiftLint 0.41.0's `--config` flag and nested
+  configs handling
+  [#154](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/154).
+
 ## 0.24.4
 
 - Updates to SwiftLint
