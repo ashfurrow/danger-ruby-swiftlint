@@ -69,7 +69,7 @@ module Danger
 
       config_file_path = if config_file
                            config_file
-                         elsif File.file?('.swiftlint.yml')
+                         elsif !lint_all_files && File.file?('.swiftlint.yml')
                            File.expand_path('.swiftlint.yml')
                          end
       log "Using config file: #{config_file_path}"
