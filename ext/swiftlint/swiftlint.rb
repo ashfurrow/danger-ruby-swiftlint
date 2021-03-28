@@ -8,14 +8,21 @@ class Swiftlint
 
   # Runs swiftlint
   def run(cmd = 'lint', additional_swiftlint_args = '', options = {}, env = nil)
-    # change pwd before run swiftlint
-    Dir.chdir options.delete(:pwd) if options.key? :pwd
+    # allow for temporary change to pwd before running swiftlint
+    pwd = options.delete(:pwd)
+    command = "#{swiftlint_path} #{cmd} #{swiftlint_arguments(options, additional_swiftlint_args)}"
 
     # Add `env` to environment
     update_env(env)
     begin
       # run swiftlint with provided options
-      `#{swiftlint_path} #{cmd} #{swiftlint_arguments(options, additional_swiftlint_args)}`
+      if pwd
+        Dir.chdir(pwd) do 
+          `#{command}`
+        end
+      else
+        `#{command}`
+      end
     ensure
       # Remove any ENV variables we might have added
       restore_env()

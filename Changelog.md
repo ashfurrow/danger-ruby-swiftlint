@@ -4,6 +4,8 @@
 
 ## Nothing yet!
 
+- **Possible Breaking Change**: Changes the plugin so that it does not change the current working directory when using the `directory` option. That is to say, calling `Swiftlint.lint(directory: ...)` no longer changes the return value of `Dir.pwd`, which could inadvertently affect subsequent Dangerfile execution. See [#157](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/157)
+
 ## 0.24.5
 
 - Fixes incompatibility with SwiftLint 0.41.0's `--config` flag and nested
