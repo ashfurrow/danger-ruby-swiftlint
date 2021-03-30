@@ -25,9 +25,23 @@ describe Swiftlint do
     end
   end
 
+  it 'changes directory when a pwd option is specified' do
+    expect(Dir).to receive(:chdir) do |*args, &block|
+      expect(args).to match_array([Dir.pwd])
+      expect(block).not_to be_nil
+    end
+    swiftlint.run('lint', '', pwd: Dir.pwd)
+  end
+
+  it 'does not change directory when no pwd option is specified' do
+    allow(swiftlint).to receive(:`)
+    expect(Dir).not_to receive(:chdir)
+    swiftlint.run('lint', '')
+  end
+
   it 'runs lint by default with options being optional' do
     expect(swiftlint).to receive(:`).with(including('swiftlint lint'))
-    swiftlint.run
+    swiftlint.run('lint', '')
   end
 
   it 'runs accepting symbolized options' do
