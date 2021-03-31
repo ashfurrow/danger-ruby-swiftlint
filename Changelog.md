@@ -6,9 +6,13 @@
 
 - Nothing yet!
 
+## 0.26.0
+
+- No longer infers `config_file` parameter if unspecified. See [#160](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/160).
+
 ## 0.25.0
 
-- **Possible Breaking Change**: Changes the plugin so that it does not change the current working directory when using the `directory` option. That is to say, calling `Swiftlint.lint(directory: ...)` no longer changes the return value of `Dir.pwd`, which could inadvertently affect subsequent Dangerfile execution. See [#157](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/157)
+- **Possible Breaking Change**: Changes the plugin so that it does not change the current working directory when using the `directory` option. That is to say, calling `Swiftlint.lint(directory: ...)` no longer changes the return value of `Dir.pwd`, which could inadvertently affect subsequent Dangerfile execution. See [#157](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/157).
 
 ## 0.24.5
 
