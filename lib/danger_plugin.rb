@@ -46,7 +46,7 @@ module Danger
 
     # Errors found
     attr_accessor :errors
-    
+
     # All issues found
     attr_accessor :issues
 
@@ -67,12 +67,12 @@ module Danger
       # Fails if swiftlint isn't installed
       raise 'swiftlint is not installed' unless swiftlint.installed?
 
-      config_file_path = if config_file
-                           config_file
-                         elsif !lint_all_files && File.file?('.swiftlint.yml')
-                           File.expand_path('.swiftlint.yml')
-                         end
-      log "Using config file: #{config_file_path}"
+      config_file_path = config_file
+      if config_file_path
+        log "Using config file: #{config_file_path}"
+      else
+        log 'Config file was not specified.'
+      end
 
       dir_selected = directory ? File.expand_path(directory) : Dir.pwd
       log "Swiftlint will be run from #{dir_selected}"
@@ -124,7 +124,7 @@ module Danger
         issues = issues.take(@max_num_violations)
       end
       log "Received from Swiftlint: #{issues}"
-      
+
       # filter out any unwanted violations with the passed in select_block
       if select_block && !no_comment
         issues = issues.select { |issue| select_block.call(issue) }
@@ -133,7 +133,7 @@ module Danger
       # Filter warnings and errors
       @warnings = issues.select { |issue| issue['severity'] == 'Warning' }
       @errors = issues.select { |issue| issue['severity'] == 'Error' }
-      
+
       # Early exit so we don't comment
       return if no_comment
 
