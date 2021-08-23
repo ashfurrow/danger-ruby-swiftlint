@@ -2,7 +2,9 @@
 
 ## Current Master
 
-## Nothing yet!
+- Nothing yet!
+
+## 0.27.0
 
 - Update SwiftLint to 0.43.1 for inclusive_language allowance list support. See [#165](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/165).
 
