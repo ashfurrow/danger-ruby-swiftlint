@@ -210,11 +210,13 @@ module Danger
     # @return [Array] swift files
     def find_swift_files(dir_selected, files = nil, excluded_paths = [], included_paths = [])
       # Assign files to lint
-      files = if files.nil?
-                (git.modified_files - git.deleted_files) + git.added_files
-              else
-                Dir.glob(files)
-              end
+      if files.nil?
+        renamed_files_hash = git.renamed_files.map { |rename| [rename[:before], rename[:after]] }.to_h
+        post_rename_modified_files = git.modified_files.map { |modified_file| renamed_files_hash[modified_file] || modified_file }
+        files = (post_rename_modified_files - git.deleted_files) + git.added_files
+      else
+        files = Dir.glob(files)
+      end
       # Filter files to lint
       excluded_paths_list = Find.find(*excluded_paths).to_a
       included_paths_list = Find.find(*included_paths).to_a
