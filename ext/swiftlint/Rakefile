@@ -10,16 +10,13 @@ namespace :swiftlint do
     REPO = 'https://github.com/realm/SwiftLint'
     VERSION = ENV['SWIFTLINT_VERSION'] || DangerSwiftlint::SWIFTLINT_VERSION
     ASSET = 'portable_swiftlint.zip'
-    URL = "#{REPO}/releases/download/#{VERSION}/#{ASSET}"
-    DESTINATION = File.expand_path(File.join(File.dirname(__FILE__), 'bin'))
+    ENV['ASSET'] = ASSET
+    ENV['URL'] = "#{REPO}/releases/download/#{VERSION}/#{ASSET}"
+    ENV['SWIFTLINT_MD5_HASH'] = DangerSwiftlint::SWIFTLINT_HASH
+    ENV['DESTINATION'] = File.expand_path(File.join(File.dirname(__FILE__), 'bin'))
 
     puts "Downloading swiftlint@#{VERSION}"
-    sh [
-      "mkdir -p '#{DESTINATION}'",
-      "curl -s -L #{URL} -o #{ASSET}",
-      "unzip -q #{ASSET} -d '#{DESTINATION}'",
-      "rm #{ASSET}"
-    ].join(' && ')
+    sh "./downloadSwiftlint.sh"
   end
 end
 
