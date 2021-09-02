@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.28.0
+
+- Adds integrity verification when downloading SwiftLint. See [#162](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/162).
+
 ## 0.27.0
 
 - Update SwiftLint to 0.43.1 for inclusive_language allowance list support. See [#165](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/165).
