@@ -219,6 +219,24 @@ module Danger
           expect { @swiftlint.lint_files }.not_to raise_error
         end
 
+        it 'crashes if renamed_files is not configured properly' do
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFileThatWasRenamedToSomethingElse.swift'
+                                                                       ])
+          expect { @swiftlint.lint_files }.to raise_error(NoMethodError)
+        end
+
+        it 'does not crash if a modified file was renamed' do
+          allow(@swiftlint.git).to receive(:modified_files).and_return([
+                                                                         'spec/fixtures/SwiftFileThatWasRenamedToSomethingElse.swift'
+                                                                       ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([
+                                                                        { before: 'spec/fixtures/SwiftFileThatWasRenamedToSomethingElse.swift',
+                                                                          after: 'spec/fixtures/SwiftFile.swift' }
+                                                                      ])
+          expect { @swiftlint.lint_files }.not_to raise_error
+        end
+
         it 'does not lint files in the excluded paths' do
           allow(@swiftlint.git).to receive(:added_files).and_return([])
           allow(@swiftlint.git).to receive(:modified_files).and_return([
