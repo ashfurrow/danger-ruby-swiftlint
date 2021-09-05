@@ -143,6 +143,7 @@ module Danger
         it 'uses git diff when files are not provided' do
           allow(@swiftlint.git).to receive(:modified_files).and_return(['spec/fixtures/SwiftFile.swift'])
           allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
           allow_any_instance_of(Swiftlint).to receive(:lint)
             .with(anything, '',
               { 'SCRIPT_INPUT_FILE_COUNT' => '1',
@@ -187,6 +188,7 @@ module Danger
                                                                          'spec/fixtures/some_dir/SwiftFile.swift',
                                                                          'spec/fixtures/SwiftFile.swift'
                                                                        ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(anything, '',
@@ -212,6 +214,7 @@ module Danger
           # JSON object.
 
           allow_any_instance_of(Swiftlint).to receive(:lint).and_return('')
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect { @swiftlint.lint_files }.not_to raise_error
         end
@@ -223,7 +226,7 @@ module Danger
                                                                          'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift',
                                                                          'spec/fixtures/excluded_dir/SwiftFile WithEscaped+CharactersThatShouldNotBeIncluded.swift'
                                                                        ])
-
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(anything, '',
               { 'SCRIPT_INPUT_FILE_COUNT' => '1',
@@ -241,6 +244,7 @@ module Danger
                                                                          'spec/fixtures/SwiftFile.swift',
                                                                          'spec/fixtures/some_dir/SwiftFile.swift'
                                                                        ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(anything, '',
@@ -259,6 +263,7 @@ module Danger
                                                                          'spec/fixtures/SwiftFile.swift',
                                                                          'spec/fixtures/some_dir/SwiftFile.swift'
                                                                        ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(anything, '',
@@ -277,6 +282,7 @@ module Danger
           allow(@swiftlint.git).to receive(:modified_files).and_return([
                                                                          'spec/fixtures/SwiftFile.swift'
                                                                        ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .once
@@ -291,6 +297,7 @@ module Danger
           allow(@swiftlint.git).to receive(:modified_files).and_return([
                                                                          'spec/fixtures/SwiftFile.swift'
                                                                        ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .once
@@ -305,6 +312,7 @@ module Danger
           allow(@swiftlint.git).to receive(:modified_files).and_return([
                                                                          'spec/fixtures/SwiftFile.swift'
                                                                        ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(config: nil), '', anything)
@@ -319,6 +327,7 @@ module Danger
           allow(@swiftlint.git).to receive(:modified_files).and_return([
                                                                          'spec/fixtures/SwiftFile.swift'
                                                                        ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(hash_including(config: 'spec/fixtures/some_config.yml'), '', anything)
@@ -342,6 +351,7 @@ module Danger
           allow(@swiftlint.git).to receive(:deleted_files).and_return([
                                                                         'spec/fixtures/DeletedFile.swift'
                                                                       ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .with(anything, '',
@@ -578,6 +588,7 @@ module Danger
                                                                          'spec/fixtures/excluded_dir/SwiftFileThatShouldNotBeIncluded.swift',
                                                                          'spec/fixtures/excluded_dir/SwiftFile WithEscaped+CharactersThatShouldNotBeIncluded.swift'
                                                                        ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
 
           expect_any_instance_of(Swiftlint).to receive(:lint)
             .once
