@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/ashfurrow/danger-ruby-swiftlint'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z`.split("\0").select { |f| f.end_with? 'rb' }
+  spec.files         = `git ls-files -z`.split("\0").select { |f| f.end_with?('rb') || f.end_with?('sh') }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
   spec.extensions    = %w[ext/swiftlint/Rakefile]
