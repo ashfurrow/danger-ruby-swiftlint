@@ -4,9 +4,13 @@
 
 - Nothing yet!
 
+## 0.29.2
+
+- Fixes `Rake aborted` error with status 127. See [#173](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/173).
+
 ## 0.29.1
 
-- Fixes `Rake aborted` error with status 127. See [#172](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/172).
+- ~Fixes `Rake aborted` error with status 127. See [#172](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/172).~
 
 ## 0.29.0
 
