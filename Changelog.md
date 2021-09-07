@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.29.0
+
+- Adds integrity verification when downloading SwiftLint. See [#162](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/162).
+
 ## 0.28.0
 
 - Fixes a crash caused by renamed files in a pull request. See [#168](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/168).

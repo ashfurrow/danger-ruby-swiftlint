@@ -12,14 +12,10 @@ namespace :swiftlint do
     ASSET = 'portable_swiftlint.zip'
     URL = "#{REPO}/releases/download/#{VERSION}/#{ASSET}"
     DESTINATION = File.expand_path(File.join(File.dirname(__FILE__), 'bin'))
+    SWIFTLINT_MD5_HASH = DangerSwiftlint::SWIFTLINT_HASH
 
     puts "Downloading swiftlint@#{VERSION}"
-    sh [
-      "mkdir -p '#{DESTINATION}'",
-      "curl -s -L #{URL} -o #{ASSET}",
-      "unzip -q #{ASSET} -d '#{DESTINATION}'",
-      "rm #{ASSET}"
-    ].join(' && ')
+    sh "./downloadSwiftlint.sh -u #{URL} -d #{DESTINATION} -a #{ASSET} -dh #{SWIFTLINT_MD5_HASH}"
   end
 end
 

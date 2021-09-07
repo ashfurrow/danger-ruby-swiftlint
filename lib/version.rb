@@ -3,4 +3,5 @@
 module DangerSwiftlint
   VERSION = '0.28.0'
   SWIFTLINT_VERSION = '0.43.1'
+  SWIFTLINT_HASH = '4eaeabbb43b308975d16e3d9869880dc'
 end
