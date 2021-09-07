@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.28.0
+
+- Fixes a crash caused by renamed files in a pull request. See [#168](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/168).
+
 ## 0.27.0
 
 - Update SwiftLint to 0.43.1 for inclusive_language allowance list support. See [#165](https://github.com/ashfurrow/danger-ruby-swiftlint/issues/165).
