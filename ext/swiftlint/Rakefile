@@ -16,7 +16,7 @@ namespace :swiftlint do
     SWIFTLINT_MD5_HASH = DangerSwiftlint::SWIFTLINT_HASH
 
     puts "Downloading swiftlint@#{VERSION}"
-    sh "bash #{SCRIPT_PATH}/downloadSwiftlint.sh -u #{URL} -d #{DESTINATION} -a #{ASSET} -dh #{SWIFTLINT_MD5_HASH}"
+    sh "#{SCRIPT_PATH}/downloadSwiftlint.sh -u #{URL} -d #{DESTINATION} -a #{ASSET} -dh #{SWIFTLINT_MD5_HASH}"
   end
 end
 
