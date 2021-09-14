@@ -31,10 +31,18 @@ do
     shift
 done
 
+# If macOS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+   hash_cmd="md5 -q ${asset}"
+# Default to linux
+else
+   hash_cmd="md5sum ${asset} | awk '{ print $1 }'"
+fi
+
 ### Download
 mkdir -p "${destination}"
 curl -s -L "${url}" -o "${asset}"
-if [[ ! -z "${SWIFTLINT_VERSION}" || $(md5 -q "${asset}") == "${default_hash}" ]]; then
+if [[ ! -z "${SWIFTLINT_VERSION}" || "$hash_cmd" == "${default_hash}" ]]; then
   # if another version is set || our hardcoded hash is correct
   unzip -o -q "${asset}" -d "${destination}"
 else
