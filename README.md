@@ -1,4 +1,4 @@
-# Danger SwiftLint [![Build Status](https://travis-ci.org/ashfurrow/danger-ruby-swiftlint.svg?branch=master)](https://travis-ci.org/ashfurrow/danger-ruby-swiftlint)
+# Danger SwiftLint [![Build Status](https://app.travis-ci.com/ashfurrow/danger-ruby-swiftlint.svg?branch=master)](https://app.travis-ci.com/ashfurrow/danger-ruby-swiftlint)
 
 A [Danger Ruby](https://github.com/danger/danger) plugin for [SwiftLint](https://github.com/realm/SwiftLint) that runs on macOS.
 
