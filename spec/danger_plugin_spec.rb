@@ -220,6 +220,7 @@ module Danger
         end
 
         it 'crashes if renamed_files is not configured properly' do
+          allow_any_instance_of(Swiftlint).to receive(:lint).and_return('')
           allow(@swiftlint.git).to receive(:modified_files).and_return([
                                                                          'spec/fixtures/SwiftFileThatWasRenamedToSomethingElse.swift'
                                                                        ])
@@ -227,6 +228,7 @@ module Danger
         end
 
         it 'does not crash if a modified file was renamed' do
+          allow_any_instance_of(Swiftlint).to receive(:lint).and_return('')
           allow(@swiftlint.git).to receive(:modified_files).and_return([
                                                                          'spec/fixtures/SwiftFileThatWasRenamedToSomethingElse.swift'
                                                                        ])

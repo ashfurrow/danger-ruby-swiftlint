@@ -34,7 +34,16 @@ done
 ### Download
 mkdir -p "${destination}"
 curl -s -L "${url}" -o "${asset}"
-if [[ ! -z "${SWIFTLINT_VERSION}" || $(md5 -q "${asset}") == "${default_hash}" ]]; then
+
+# If macOS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+   resulting_hash=`md5 -q ${asset}`
+# Default to linux
+else
+   resulting_hash=`md5sum ${asset} | awk '{ print $1 }'`
+fi
+
+if [[ ! -z "${SWIFTLINT_VERSION}" || "$resulting_hash" == "${default_hash}" ]]; then
   # if another version is set || our hardcoded hash is correct
   unzip -o -q "${asset}" -d "${destination}"
 else
