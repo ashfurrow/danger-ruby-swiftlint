@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.29.4
+
+- Fixes issues running the plugin on Linux. See [#174](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/174)
+
 ## 0.29.3
 
 - Fixes `Rake aborted` error with status 127. See [#173](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/173).
