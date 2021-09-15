@@ -31,6 +31,8 @@ do
     shift
 done
 
+set -x
+
 # If macOS
 if [[ "$OSTYPE" == "darwin"* ]]; then
    hash_cmd="md5 -q ${asset}"
