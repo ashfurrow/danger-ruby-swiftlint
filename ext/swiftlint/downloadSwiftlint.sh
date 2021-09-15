@@ -31,8 +31,6 @@ do
     shift
 done
 
-set -x
-
 ### Download
 mkdir -p "${destination}"
 curl -s -L "${url}" -o "${asset}"
