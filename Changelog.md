@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.30.1
+
+- Fixes problem with previous release. See [#179](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/179).
+
 ## 0.30.0
 
 - Updates SwiftLint version to 0.46.2. See [#176](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/176).
