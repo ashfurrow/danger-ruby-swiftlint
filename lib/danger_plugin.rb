@@ -369,7 +369,7 @@ module Danger
               lines << line_number
           end
           line_number += 1 if line_number > 0 && !git_removed_line_regex.match?(line)
-          line_number = starting_line_number if line_number == 0 && starting_line_number > 0
+          line_number = starting_line_number if starting_line_number > 0
       end
       lines
     end
