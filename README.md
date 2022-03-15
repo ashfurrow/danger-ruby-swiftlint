@@ -91,6 +91,10 @@ swiftlint.errors    # just errors
 
 You can use the `SWIFTLINT_VERSION` environment variable to override the default version installed via the `rake install` task.
 
+Or, if you are behind a proxy or using a package manager which does not allow you to go to github.com directly, you can manually download the SwiftLint package and skip the installation by setting the DANGER_SKIP_SWIFTLINT_INSTALL environment variable equal to YES.
+<https://github.com/ashfurrow/danger-ruby-swiftlint/blob/7c33f610349f40fabd28746a6ee2576b0aed7307/ext/swiftlint/Rakefile#L8>
+
+
 Finally, if something's not working correctly, you can debug this plugin by using setting `swiftlint.verbose = true`.
 
 ## Attribution
