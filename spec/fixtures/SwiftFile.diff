@@ -37,3 +37,12 @@ index 0e18440..9dda539 100755
          }
 -        print(total)
 +        print("Total:", total)
+@@ -38,4 +61,8 @@ let rooms = ["2_101", "2_102", "2_103"] {
+     rooms.append("3_102")
+     rooms.append("3_104")
+     rooms.append("3_105")
++
++    // Add 1st floor
++    rooms.append("1_231")
++    rooms.append("1_201")
+     print(rooms)

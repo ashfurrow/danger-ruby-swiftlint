@@ -431,8 +431,8 @@ module Danger
           allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
           modified_lines = @swiftlint.git_modified_lines("spec/fixtures/SwiftFile.swift")
           expect(modified_lines).to_not be_empty
-          expect(modified_lines.length).to eql(24)
-          expect(modified_lines).to eql([15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 42])
+          expect(modified_lines.length).to eql(28)
+          expect(modified_lines).to eql([15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 42, 64, 65, 66, 67])
         end
 
         it 'Get git modified files info' do
