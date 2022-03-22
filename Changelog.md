@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.30.2
+
+- Fixes a bug in `git_modified_lines` that would cause the tool to not report all lint violations. See [#181](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/181).
+
 ## 0.30.1
 
 - Fixes problem with previous release. See [#179](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/179).
