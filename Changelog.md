@@ -3,6 +3,9 @@
 ## Current Master
 
 - Nothing yet!
+## 0.30.3
+
+- Updates SwiftLint version to 0.50.0. See [#188](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/188).
 
 ## 0.30.2
 
