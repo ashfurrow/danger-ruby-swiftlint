@@ -53,6 +53,8 @@ module Danger
     # Whether all issues or ones in PR Diff to be reported
     attr_accessor :filter_issues_in_diff
 
+    attr_accessor :file_path_style
+
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of
     # .markdown and .md files.
@@ -298,7 +300,12 @@ module Danger
     def send_inline_comment(results, method)
       dir = "#{Dir.pwd}/"
       results.each do |r|
-        github_filename = r['file'].gsub(dir, '')
+
+        raw_file_name = r['file'].gsub(dir, '')
+        file_name = raw_file_name
+        if file_path_style == 'root'
+          file_name = file_name.sub('.', '')
+        end
         message = "#{r['reason']}".dup
 
         # extended content here
@@ -307,7 +314,7 @@ module Danger
         message << "`#{r['rule_id']}`" # helps writing exceptions // swiftlint:disable:this rule_id
         message << " `#{filename}:#{r['line']}`" # file:line for pasting into Xcode Quick Open
         
-        send(method, message, file: github_filename, line: r['line'])
+        send(method, message, file: file_name, line: r['line'])
       end
     end
 
