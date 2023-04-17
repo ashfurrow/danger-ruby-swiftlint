@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.33.0
+
+- Updates SwiftLint version to 0.51.0.
+
 ## 0.32.0
 
 - Updates SwiftLint version to 0.50.3.
