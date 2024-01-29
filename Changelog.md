@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.35.0
+
+- Updates Thor to 1.0.0. 
+
 ## 0.34.0
 
 - Updates SwiftLint version to 0.54.0.
