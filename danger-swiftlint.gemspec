@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.3'
 
   spec.add_dependency 'danger'
-  spec.add_dependency 'thor', '~> 0.19'
+  spec.add_dependency 'thor', '~> 1.0.0'
   spec.add_dependency 'rake', '> 10'
 
   # General ruby development
