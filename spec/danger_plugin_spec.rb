@@ -597,7 +597,21 @@ module Danger
             expect(issues.length).to eql(warnings.length + errors.length)
           end
         end
-        
+
+        context 'when select_block is implemented' do
+          it 'can fail_on_error if specified' do
+            # given
+            allow(@swiftlint).to receive(:fail)
+            allow_any_instance_of(Swiftlint).to receive(:lint)
+              .and_return(@swiftlint_multiviolation_response)
+
+            # when
+            @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: true) { |_| true }
+            
+            # then
+            expect(@swiftlint).to have_received(:fail).at_least(:once)
+          end
+        end
 
         it 'parses environment variables set within the swiftlint config' do
           ENV['ENVIRONMENT_EXAMPLE'] = 'excluded_dir'
