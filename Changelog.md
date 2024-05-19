@@ -2,7 +2,8 @@
 
 ## Current Master
 
-- Nothing yet!
+- Updates Swiftlint to 0.55.1. (use `additional_swiftlint_args: "--baseline additional_swiftlint_args: path/to/baseline.json")`
+- Add a readme on How To Update Swiftlint version for this repository.
 
 ## 0.35.0
 
