@@ -613,7 +613,7 @@ module Danger
             expect(@swiftlint).to have_received(:fail).at_least(:once)
           end
 
-          it 'doesn not fail if fail_on_error is false' do
+          it 'does not fail if fail_on_error is false' do
             # given
             @swiftlint.strict = false
             allow(@swiftlint).to receive(:fail)
