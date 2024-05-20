@@ -97,6 +97,10 @@ Or, if you are behind a proxy or using a package manager which does not allow yo
 
 Finally, if something's not working correctly, you can debug this plugin by using setting `swiftlint.verbose = true`.
 
+## Contribution tips
+### Upgrading Swiftlint to the latest version
+Follow this guide -> [How-To-Upgrade-Swiftlint](/ext/swiftlint/README.md)
+
 ## Attribution
 
 Original structure, sequence, and organization of repo taken from [danger-prose](https://github.com/dbgrandi/danger-prose) by [David Grandinetti](https://github.com/dbgrandi/).
