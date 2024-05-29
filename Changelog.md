@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.36.1
+
+- Fix missing SwiftLint installation error due to bad hash
+
 ## 0.36.0
 
 - Updates Swiftlint to 0.55.1. (use `additional_swiftlint_args: "--baseline additional_swiftlint_args: path/to/baseline.json")`
