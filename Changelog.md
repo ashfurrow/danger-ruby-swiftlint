@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.37.0
+
+- Updates Swiftlint to 0.57.0.
+
 ## 0.36.1
 
 - Fix missing SwiftLint installation error due to bad hash
