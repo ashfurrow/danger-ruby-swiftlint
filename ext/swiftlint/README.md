@@ -2,7 +2,7 @@
 
 ### Step 1: Find the hash of the new swiftlint binary
 
-Go on the [Swiftlint repo's releases page](https://github.com/realm/SwiftLint/releases), go to the "Assets" section, and download the `portable_swiftlint.zip` file. Then open a termainl and get the md5 hash:
+Go on the [Swiftlint repo's releases page](https://github.com/realm/SwiftLint/releases), go to the "Assets" section, and download the `portable_swiftlint.zip` file. Then open a terminal and get the md5 hash:
 
 
 ```sh
