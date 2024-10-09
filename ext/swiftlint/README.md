@@ -2,10 +2,18 @@
 
 ### Step 1: Find the hash of the new swiftlint binary
 
-Go on the Swiftlint repo, download the latest archive and unzip it
-On macos: execute a md5 against the `swiftint` binary
-On linux: execute a md5sum against the `swiftint` binary
-Save the hash
+Go on the [Swiftlint repo's releases page](https://github.com/realm/SwiftLint/releases), go to the "Assets" section, and download the `portable_swiftlint.zip` file. Then open a terminal and get the md5 hash:
+
+
+```sh
+# macos 
+md5 -q  portable_swiftlint.zip
+
+# linux
+md5sum portable_swiftlint.
+```
+
+Copy the hash.
 
 <details><summary>Why is the md5 has important?</summary>
 
@@ -13,24 +21,11 @@ Swiftlint is often used in CI environments, which have access to sensitive data.
 
 </details>
 
-### Step 2: Fork and clone this repository
+### Step 2: Update the Hash
 
-### Step 3: Execute the rakefile
+Edit [`/lib/version.rb`](https://github.com/ashfurrow/danger-ruby-swiftlint/blob/master/lib/version.rb) and change the following values:
 
-To fetch the latest hash version, you need to execute the rakefile in this folder
+- `SWIFTLINT_VERSION` to the version of SwiftLint you're updating too.
+- `SWIFTLINT_HASH` to the hash value from Step 1.
 
-```bash
-bundle install && rake
-```
-
-The hash is printed in the terminal (`-dh` value)
-
-### Step 3: Open the PR
-
-If you don't have errors on step 3, then you can open a PR by editing the file
-`/lib/version.rb` and changing:
-
-- SWIFTLINT_VERSION=${target_swiftlint_version}
-- SWIFTLINT_HASH=${md5_hash}
-
-Thank you for your contributions.
+Then open a PR. Thank you for your contribution!
