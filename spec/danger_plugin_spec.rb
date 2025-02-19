@@ -444,6 +444,7 @@ module Danger
           allow(@swiftlint.git).to receive(:deleted_files).and_return([
                                                                         'spec/fixtures/DeletedFile.swift'
                                                                       ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
           git_diff = File.read("spec/fixtures/SwiftFile.diff")
           allow(@swiftlint.git).to receive(:diff_for_file).and_return(git_diff)
           allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
@@ -461,6 +462,7 @@ module Danger
           allow(@swiftlint.git).to receive(:deleted_files).and_return([
                                                                         'spec/fixtures/DeletedFile.swift'
                                                                       ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
           git_diff = File.read("spec/fixtures/SwiftFile.diff")
           allow(@swiftlint.git).to receive(:diff_for_file).and_return(git_diff)
           allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
