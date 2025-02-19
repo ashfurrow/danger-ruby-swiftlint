@@ -53,9 +53,6 @@ module Danger
     # Whether all issues or ones in PR Diff to be reported
     attr_accessor :filter_issues_in_diff
 
-    # Whether including renamed files
-    attr_accessor :track_renames
-
     # Lints Swift files. Will fail if `swiftlint` cannot be installed correctly.
     # Generates a `markdown` list of warnings for the prose in a corpus of
     # .markdown and .md files.
@@ -217,7 +214,6 @@ module Danger
         renamed_files_hash = git.renamed_files.map { |rename| [rename[:before], rename[:after]] }.to_h
         post_rename_modified_files = git.modified_files.map { |modified_file| renamed_files_hash[modified_file] || modified_file }
         files = (post_rename_modified_files - git.deleted_files) + git.added_files
-        files += git.renamed_files if track_renames
       else
         files = Dir.glob(files)
       end
@@ -336,7 +332,7 @@ module Danger
     # @return [Array] swiftlint issues
     def filter_git_diff_issues(issues)
       modified_files_info = git_modified_files_info()
-      return issues.select { |i| 
+      return issues.select { |i|
            modified_files_info["#{i['file']}"] != nil && modified_files_info["#{i['file']}"].include?(i['line'].to_i) 
         }
     end
@@ -347,11 +343,17 @@ module Danger
     def git_modified_files_info()
         modified_files_info = Hash.new
         updated_files = (git.modified_files - git.deleted_files) + git.added_files
-        updated_files += git.renamed_files if track_renames
         updated_files.each {|file|
             modified_lines = git_modified_lines(file)
             modified_files_info[File.expand_path(file)] = modified_lines
         }
+        git.renamed_files.each { |pair|
+            before_file = pair[:before]
+            after_file = pair[:after]
+            modified_lines = git_modified_lines(before_file)
+            modified_files_info[File.expand_path(after_file)] = modified_lines
+        }
+
         modified_files_info
     end
 
