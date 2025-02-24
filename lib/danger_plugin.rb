@@ -332,7 +332,7 @@ module Danger
     # @return [Array] swiftlint issues
     def filter_git_diff_issues(issues)
       modified_files_info = git_modified_files_info()
-      return issues.select { |i| 
+      return issues.select { |i|
            modified_files_info["#{i['file']}"] != nil && modified_files_info["#{i['file']}"].include?(i['line'].to_i) 
         }
     end
@@ -347,6 +347,13 @@ module Danger
             modified_lines = git_modified_lines(file)
             modified_files_info[File.expand_path(file)] = modified_lines
         }
+        git.renamed_files.each { |pair|
+            before_file = pair[:before]
+            after_file = pair[:after]
+            modified_lines = git_modified_lines(before_file)
+            modified_files_info[File.expand_path(after_file)] = modified_lines
+        }
+
         modified_files_info
     end
 

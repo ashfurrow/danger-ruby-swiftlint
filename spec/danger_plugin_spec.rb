@@ -444,6 +444,7 @@ module Danger
           allow(@swiftlint.git).to receive(:deleted_files).and_return([
                                                                         'spec/fixtures/DeletedFile.swift'
                                                                       ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
           git_diff = File.read("spec/fixtures/SwiftFile.diff")
           allow(@swiftlint.git).to receive(:diff_for_file).and_return(git_diff)
           allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
@@ -461,6 +462,7 @@ module Danger
           allow(@swiftlint.git).to receive(:deleted_files).and_return([
                                                                         'spec/fixtures/DeletedFile.swift'
                                                                       ])
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([])
           git_diff = File.read("spec/fixtures/SwiftFile.diff")
           allow(@swiftlint.git).to receive(:diff_for_file).and_return(git_diff)
           allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
@@ -478,6 +480,39 @@ module Danger
               'SCRIPT_INPUT_FILE_0' => a_string_ending_with('spec/fixtures/SwiftFile.swift') })
           .and_return(swiftlint_violations_response)
           
+          @swiftlint.filter_issues_in_diff = true
+          @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
+
+          status = @swiftlint.status_report
+          expect(status[:warnings]).to eql(["Force casts should be avoided.\n`force_cast` `SwiftFile.swift:16`"])
+        end
+
+        it 'issues violations in renamed_files' do
+          allow(@swiftlint.git).to receive(:added_files).and_return([])
+          allow(@swiftlint.git).to receive(:modified_files).and_return([])
+          allow(@swiftlint.git).to receive(:deleted_files).and_return([])
+          renamed_info = {
+            before: "spec/fixtures/BeforeRenamedSwiftFile.swift",
+            after: "spec/fixtures/SwiftFile.swift"
+          }
+          allow(@swiftlint.git).to receive(:renamed_files).and_return([renamed_info])
+          git_diff = File.read("spec/fixtures/SwiftFile.diff")
+          allow(@swiftlint.git).to receive(:diff_for_file).and_return(git_diff)
+          allow(@swiftlint.git.diff_for_file).to receive(:patch).and_return(git_diff)
+
+          swiftlint_violations_response = '[{ "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 19, "file" : "/Users/me/this_repo/spec/fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 14 },
+                                                 { "rule_id" : "force_cast", "reason" : "Force casts should be avoided.", "character" : 10, "file" : "/Users/me/this_repo/spec/fixtures/SwiftFile.swift", "severity" : "Error", "type" : "Force Cast", "line" : 16 }]'
+
+          violations_json = JSON.parse(swiftlint_violations_response)
+          violations_json[0][:file] = File.expand_path('spec/fixtures/SwiftFile.swift')
+          violations_json[1][:file] = File.expand_path('spec/fixtures/SwiftFile.swift')
+          swiftlint_violations_response= violations_json.to_json
+          allow_any_instance_of(Swiftlint).to receive(:lint)
+                                                .with(anything, '',
+                                                      { 'SCRIPT_INPUT_FILE_COUNT' => '1',
+                                                        'SCRIPT_INPUT_FILE_0' => a_string_ending_with('spec/fixtures/SwiftFile.swift') })
+                                                .and_return(swiftlint_violations_response)
+
           @swiftlint.filter_issues_in_diff = true
           @swiftlint.lint_files('spec/fixtures/*.swift', inline_mode: true, fail_on_error: false, additional_swiftlint_args: '')
 
