@@ -4,6 +4,10 @@
 
 - Nothing yet!
 
+## 0.37.1
+
+- Fixes renamed modified files. See [#206](https://github.com/ashfurrow/danger-ruby-swiftlint/pull/206).
+
 ## 0.37.0
 
 - Updates Swiftlint to 0.57.0.
