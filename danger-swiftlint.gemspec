@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.3'
 
   spec.add_dependency 'danger'
-  spec.add_dependency 'thor', '~> 1.0.0'
+  spec.add_dependency 'thor', '~> 1.4'
   spec.add_dependency 'rake', '> 10'
 
   # General ruby development
@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.4'
 
   # Makes testing easy via `bundle exec guard`
-  spec.add_development_dependency 'guard', '~> 2.14'
+  spec.add_development_dependency 'guard', '~> 2.19'
   spec.add_development_dependency 'guard-rspec', '~> 4.7'
 
   # If you want to work on older builds of ruby
