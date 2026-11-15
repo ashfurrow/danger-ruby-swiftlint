@@ -219,6 +219,7 @@ module Danger
       # Filter files to lint
       excluded_paths_list = Find.find(*excluded_paths).to_a
       included_paths_list = Find.find(*included_paths).to_a
+      dir_prefix = File.join(dir_selected, '')
       files.
         # Ensure only swift files are selected
         select { |file| file.end_with?('.swift') }.
@@ -227,7 +228,7 @@ module Danger
         # Remove dups
         uniq.
         # Ensure only files in the selected directory
-        select { |file| file.start_with?(dir_selected) }.
+        select { |file| file == dir_selected || file.start_with?(dir_prefix) }.
         # Reject files excluded on configuration
         reject { |file| excluded_paths_list.include?(file) }.
         # Accept files included on configuration

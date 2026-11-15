@@ -180,6 +180,16 @@ module Danger
           expect(output).to_not be_empty
         end
 
+        it 'does not include sibling paths sharing the custom directory prefix' do
+          selected_directory = File.expand_path('spec/fixtures/some_dir')
+          selected_file = File.join(selected_directory, 'SwiftFile.swift')
+          sibling_file = File.join("#{selected_directory}_extra", 'SwiftFile.swift')
+          allow(Dir).to receive(:glob).and_return([selected_file, sibling_file])
+          allow(Find).to receive(:find).and_return([])
+
+          expect(@swiftlint.find_swift_files(selected_directory, 'ignored/*.swift')).to eq([selected_file])
+        end
+
         it 'only lint files specified in custom dir' do
           @swiftlint.directory = 'spec/fixtures/some_dir'
 
