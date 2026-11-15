@@ -23,7 +23,7 @@ Swiftlint is often used in CI environments, which have access to sensitive data.
 
 ### Step 2: Update the Hash
 
-Edit [`/lib/version.rb`](https://github.com/ashfurrow/danger-ruby-swiftlint/blob/master/lib/version.rb) and change the following values:
+Edit [`/lib/version.rb`](https://github.com/ashfurrow/danger-ruby-swiftlint/blob/main/lib/version.rb) and change the following values:
 
 - `SWIFTLINT_VERSION` to the version of SwiftLint you're updating too.
 - `SWIFTLINT_HASH` to the hash value from Step 1.
